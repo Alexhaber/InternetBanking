@@ -37,11 +37,9 @@ namespace InternetBanking.Infraestructure.Persistence.Migrations
 
             modelBuilder.Entity("InternetBanking.Core.Domain.Entities.CreditCard", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
 
                     b.Property<decimal>("Limit")
                         .HasColumnType("decimal(12,4)");
@@ -60,11 +58,9 @@ namespace InternetBanking.Infraestructure.Persistence.Migrations
 
             modelBuilder.Entity("InternetBanking.Core.Domain.Entities.Loan", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
 
                     b.Property<decimal>("Monto")
                         .HasColumnType("decimal(12,4)");
@@ -83,11 +79,9 @@ namespace InternetBanking.Infraestructure.Persistence.Migrations
 
             modelBuilder.Entity("InternetBanking.Core.Domain.Entities.SavingAccount", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasMaxLength(9)
+                        .HasColumnType("nvarchar(9)");
 
                     b.Property<bool>("IsPrincipal")
                         .HasColumnType("bit");

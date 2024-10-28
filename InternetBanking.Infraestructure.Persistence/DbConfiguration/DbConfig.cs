@@ -10,6 +10,7 @@ namespace InternetBanking.Infraestructure.Persistence.DbConfiguration
 			#region SavingsAccount
 			modelBuilder.Entity<SavingAccount>().ToTable("SavingAccounts");
 			modelBuilder.Entity<SavingAccount>().HasKey(a => a.Id);
+			modelBuilder.Entity<SavingAccount>().Property(a => a.Id).HasMaxLength(9).IsRequired();
 			modelBuilder.Entity<SavingAccount>().Property(a => a.UserId).IsRequired();
 			modelBuilder.Entity<SavingAccount>().Property(a => a.Monto).HasColumnType("decimal(12,4)").IsRequired();
 			modelBuilder.Entity<SavingAccount>().Property(a => a.IsPrincipal).IsRequired();
@@ -18,6 +19,7 @@ namespace InternetBanking.Infraestructure.Persistence.DbConfiguration
 			#region CreditCard
 			modelBuilder.Entity<CreditCard>().ToTable("CreditCards");
 			modelBuilder.Entity<CreditCard>().HasKey(c => c.Id);
+			modelBuilder.Entity<CreditCard>().Property(c => c.Id).HasMaxLength(9).IsRequired();
 			modelBuilder.Entity<CreditCard>().Property(c => c.UserId).IsRequired();
 			modelBuilder.Entity<CreditCard>().Property(c => c.Limit).HasColumnType("decimal(12,4)").IsRequired();
 			modelBuilder.Entity<CreditCard>().Property(c => c.Monto).HasColumnType("decimal(12,4)").IsRequired();
@@ -26,6 +28,7 @@ namespace InternetBanking.Infraestructure.Persistence.DbConfiguration
 			#region Loan
 			modelBuilder.Entity<Loan>().ToTable("Loans");
 			modelBuilder.Entity<Loan>().HasKey(l => l.Id);
+			modelBuilder.Entity<Loan>().Property(l => l.Id).HasMaxLength(9).IsRequired();
 			modelBuilder.Entity<Loan>().Property(l => l.UserId).IsRequired();
 			modelBuilder.Entity<Loan>().Property(l => l.Monto).HasColumnType("decimal(12,4)").IsRequired();
 			modelBuilder.Entity<Loan>().Property(l => l.Paid).HasColumnType("decimal(12,4)").IsRequired();

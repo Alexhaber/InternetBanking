@@ -27,8 +27,7 @@ namespace InternetBanking.Infraestructure.Persistence.Migrations
                 name: "CreditCards",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(9)", maxLength: 9, nullable: false),
                     Limit = table.Column<decimal>(type: "decimal(12,4)", nullable: false),
                     Monto = table.Column<decimal>(type: "decimal(12,4)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -42,8 +41,7 @@ namespace InternetBanking.Infraestructure.Persistence.Migrations
                 name: "Loans",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(9)", maxLength: 9, nullable: false),
                     Monto = table.Column<decimal>(type: "decimal(12,4)", nullable: false),
                     Paid = table.Column<decimal>(type: "decimal(12,4)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: false)
@@ -57,8 +55,7 @@ namespace InternetBanking.Infraestructure.Persistence.Migrations
                 name: "SavingAccounts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(9)", maxLength: 9, nullable: false),
                     Monto = table.Column<decimal>(type: "decimal(12,4)", nullable: false),
                     IsPrincipal = table.Column<bool>(type: "bit", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: false)
