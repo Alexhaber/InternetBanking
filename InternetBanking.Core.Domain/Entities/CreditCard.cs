@@ -4,9 +4,8 @@ namespace InternetBanking.Core.Domain.Entities
 {
 	public class CreditCard : AuditableBaseEntity
 	{
-        public decimal Limit { get; }
+        public decimal Limit { get; private set; }
 		public decimal Monto { get; set; }
-		public decimal Debt => Limit - Monto;
 
         public CreditCard(decimal limit)
         {

@@ -6,6 +6,5 @@ namespace InternetBanking.Core.Domain.Entities
 	{
         public decimal Monto { get; set; }
         public bool IsPrincipal { get; set; }
-        public List<Beneficiary> Beneficiaries { get; set; }
     }
 }
