@@ -1,4 +1,6 @@
-﻿using InternetBanking.Infraestructure.Persistence.Contexts;
+﻿using InternetBanking.Core.Application.Interfaces.Repositories;
+using InternetBanking.Infraestructure.Persistence.Contexts;
+using InternetBanking.Infraestructure.Persistence.Repositories;
 using InternetBanking.Infraestructure.Persistence.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +23,10 @@ namespace InternetBanking.Infraestructure.Persistence
 				services.AddDbContext<AppDbContext>(options => options.UseSqlServer(config.GetConnectionString("DbConnection"),
 					m => m.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName)));
 			}
+			#endregion
+
+			#region Repositories
+			services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 			#endregion
 		}
 
