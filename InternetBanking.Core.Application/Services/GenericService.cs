@@ -18,10 +18,11 @@ namespace InternetBanking.Core.Application.Services
 			_mapper = mapper;
 		}
 
-		public virtual async Task Add(SaveViewModel vm)
+		public virtual async Task<SaveViewModel> Add(SaveViewModel vm)
 		{
 			TEntity entity = _mapper.Map<TEntity>(vm);
-			await _repository.AddAsync(entity);
+			var entityCreated = await _repository.AddAsync(entity);
+			return _mapper.Map<SaveViewModel>(entityCreated);
 		}
 
 		public virtual async Task Delete(string id)

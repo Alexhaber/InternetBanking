@@ -24,15 +24,38 @@ namespace InternetBanking.Core.Application.Services
 			_savingAccountRepository = savingAccountRepository;
 		}
 
-		public async Task<SaveBeneficiaryViewModel> GetBeneficiaryById(string ownerId, string beneficiaryId)
+		public override async Task<SaveBeneficiaryViewModel> Add(SaveBeneficiaryViewModel vm)
 		{
-			var beneficiary = await _beneficiaryRepository.GetBeneficiaryByIdAsync(ownerId, beneficiaryId);
+			var beneficiaryAccount = await _savingAccountRepository.GetByIdAsync(vm.BeneficiaryAccountId);
+
+			if(beneficiaryAccount == null)
+			{
+				vm.HasError = true;
+				vm.Error = $"The saving account with the id: {vm.BeneficiaryAccountId} doesn't exist";
+
+				return vm;
+			}
+
+			if(await GetBeneficiaryById(vm.UserId, vm.BeneficiaryAccountId) != null)
+			{
+				vm.HasError = true;
+				vm.Error = $"The saving account {vm.BeneficiaryAccountId} was already added as a beneficiary.You cannot add it again";
+
+				return vm;
+			}
+
+			return await base.Add(vm);
+		}
+
+		public async Task<SaveBeneficiaryViewModel> GetBeneficiaryById(string userId, string beneficiaryId)
+		{
+			var beneficiary = await _beneficiaryRepository.GetBeneficiaryByIdAsync(userId, beneficiaryId);
 			return _mapper.Map<SaveBeneficiaryViewModel>(beneficiary);
 		}
 
-		public async Task Remove(string ownerId, string beneficiaryId)
+		public async Task Remove(string userId, string beneficiaryId)
 		{
-			var beneficiary = await _beneficiaryRepository.GetBeneficiaryByIdAsync(ownerId, beneficiaryId);
+			var beneficiary = await _beneficiaryRepository.GetBeneficiaryByIdAsync(userId, beneficiaryId);
 			await _beneficiaryRepository.DeleteAsync(beneficiary);
 		}
 

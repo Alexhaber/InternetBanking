@@ -2,10 +2,10 @@
 @model SaveBeneficiaryViewModel
 
 <div class="row">
-	<div class="col-md-4 offset-4">
+	<div class="col-md-6 offset-3">
 		<div class="card">
-			<div class="card-header">
-				<h3 class="card-title text-white bg-danger">@($"Deleting the beneficiary: {Model.BeneficiaryAccountId}")</h3>
+			<div class="card-header text-white bg-danger">
+				<h3 class="card-title">@($"Deleting the beneficiary: {Model.BeneficiaryAccountId}")</h3>
 			</div>
 			<div class="card-body">
 				<form asp-action="DeletePost">

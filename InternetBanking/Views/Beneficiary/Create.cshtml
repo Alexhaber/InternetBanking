@@ -9,8 +9,15 @@
 				<h3 class="card-title">Adding a new beneficiary</h3>
 			</div>
 			<div class="card-body">
+				@if (Model.HasError)
+				{
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						@Model.Error
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				}
 				<form asp-action="Create">
-					<input asp-for="UserId" type="hidden" value="@User.FindFirst(ClaimTypes.NameIdentifier)"/>
+					<input asp-for="UserId" type="hidden" value="@User.FindFirst(ClaimTypes.NameIdentifier).Value"/>
 					<div class="mb-3">
 						<label asp-for="BeneficiaryAccountId" class="form-label"> Beneficiary Account Id</label>
 						<input asp-for="BeneficiaryAccountId" class="form-control" placeholder="Beneficiary account Id" />
