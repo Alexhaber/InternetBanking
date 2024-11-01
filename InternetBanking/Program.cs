@@ -1,3 +1,4 @@
+using InternetBanking.Core.Application;
 using InternetBanking.Infraestructure.Identity;
 using InternetBanking.Infraestructure.Persistence;
 
@@ -5,13 +6,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddApplicationLayer();
 builder.Services.AddIdentityInfraestructureLayer(builder.Configuration);
 builder.Services.AddPersistenceInfraestructureLayer(builder.Configuration);
 
 var app = builder.Build();
 
-await app.Services.SeedIdentityDbAsync();
-await app.Services.SeedSavingAccountDefaulClient();
+var userId = await app.Services.SeedIdentityDbAsync();
+
+if(userId != null)
+{
+	await app.Services.SeedProductDefaulClient(userId);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -32,6 +38,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
 	name: "default",
-	pattern: "{controller=Home}/{action=Index}/{id?}");
+	pattern: "{controller=Account}/{action=Login}/{id?}");
 
 await app.RunAsync();

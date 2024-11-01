@@ -11,7 +11,9 @@ namespace InternetBanking.Core.Application
 		{
 			#region Services
 			services.AddAutoMapper(Assembly.GetExecutingAssembly());
-			services.AddTransient(typeof(IGenericService<,,>), typeof(GenericService<,,>));	
+			services.AddTransient(typeof(IGenericService<,,>), typeof(GenericService<,,>));
+			services.AddTransient<IHomeService, HomeService>();
+			services.AddTransient<IBeneficiaryService, BeneficiaryService>();
 			#endregion
 		}
 	}

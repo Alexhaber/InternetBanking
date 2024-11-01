@@ -5,7 +5,6 @@ using InternetBanking.Infraestructure.Persistence.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace InternetBanking.Infraestructure.Persistence
 {
@@ -27,10 +26,14 @@ namespace InternetBanking.Infraestructure.Persistence
 
 			#region Repositories
 			services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+			services.AddTransient<ISavingAccountRepository, SavingAccountRepository>();
+			services.AddTransient<ICreditCardRepository, CreditCardRepository>();
+			services.AddTransient<ILoanRepository, LoanRepository>();
+			services.AddTransient<IBeneficiaryRepository, BeneficiaryRepository>();
 			#endregion
 		}
 
-		public static async Task SeedSavingAccountDefaulClient(this IServiceProvider serviceProvider)
+		public static async Task SeedProductDefaulClient(this IServiceProvider serviceProvider, string userId)
 		{
 			using (var scope = serviceProvider.CreateScope())
 			{
@@ -40,7 +43,9 @@ namespace InternetBanking.Infraestructure.Persistence
 				{
 					var context = services.GetRequiredService<AppDbContext>();
 
-					await SavingAccountDefaultClient.SeedAsync(context);
+					await SavingAccountDefaultClient.SeedAsync(context, userId);
+					await CreditCardDefaultClient.SeedAsync(context, userId);
+					await LoanDefaultClient.SeedAsync(context, userId);
 				}
 				catch (Exception e)
 				{

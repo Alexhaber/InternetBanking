@@ -1,6 +1,8 @@
-﻿using InternetBanking.Infraestructure.Identity.Contexts;
+﻿using InternetBanking.Core.Application.Interfaces.Services;
+using InternetBanking.Infraestructure.Identity.Contexts;
 using InternetBanking.Infraestructure.Identity.Entities;
 using InternetBanking.Infraestructure.Identity.Seeds;
+using InternetBanking.Infraestructure.Identity.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -41,9 +43,13 @@ namespace InternetBanking.Infraestructure.Identity
 
 			services.AddAuthentication();
 			#endregion
+
+			#region Services
+			services.AddTransient<IAccountService, AccountService>();
+			#endregion
 		}
 
-		public static async Task SeedIdentityDbAsync(this IServiceProvider serviceProvider)
+		public static async Task<string?> SeedIdentityDbAsync(this IServiceProvider serviceProvider)
 		{
 			using (var scope = serviceProvider.CreateScope())
 			{
@@ -56,11 +62,11 @@ namespace InternetBanking.Infraestructure.Identity
 
 					await DefaultRoles.SeedAsync(roleManager);
 					await DefaultAdmin.SeedAsync(userManager);
-					await DefaultClient.SeedAsync(userManager);
+					return await DefaultClient.SeedAsync(userManager);
 				}
 				catch (Exception e)
 				{
-
+					return null;
 				}
 			}
 		}
