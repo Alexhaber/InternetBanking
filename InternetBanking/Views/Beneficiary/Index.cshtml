@@ -2,7 +2,7 @@
 @model List<BeneficiaryViewModel>
 
 <div class="row">
-	<div class="col-md-3 offset-9">
+	<div class="col-md-3 offset-9 mb-3">
 		<a asp-action="Create" class="btn btn-primary">Add beneficiary</a>
 	</div>
 </div>
@@ -15,16 +15,19 @@
 	{
 		@foreach(var beneficiary in Model)
 		{
-			<div class="col-md-4 mb-3">
+			<div class="col-md-3 mb-3">
 				<div class="card">
 					<div class="card-body">
-						<p class="card-text text-primary">@beneficiary.BeneficiaryName</p>
-						<p class="card-text mb-2">@beneficiary.BeneficiaryAccountId</p>
-						<a 
-							class="btn btn-sm btn-outline-danger" 
-							asp-action="Delete"
-							asp-route-ownerId=@beneficiary.UserId
-							asp-route-beneficiaryId="@beneficiary.BeneficiaryAccountId">Delete
+						<p class="card-text">@beneficiary.BeneficiaryName</p>
+						<div class="d-flex justify-content-between">
+							<p class="card-text text-primary mb-2">@beneficiary.BeneficiaryAccountId</p>
+							<p class="card-text"><small class="text-secondary">Numero de cuenta</small></p>
+						</div>
+						<a class="btn btn-sm btn-outline-danger mt-2"
+						   asp-action="Delete"
+						   asp-route-userId=@beneficiary.UserId
+						   asp-route-beneficiaryId="@beneficiary.BeneficiaryAccountId">
+							Delete
 						</a>
 					</div>
 				</div>

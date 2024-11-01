@@ -34,6 +34,8 @@ namespace InternetBanking.Core.Application.Mappings
 				.ReverseMap();
 
 			CreateMap<Beneficiary, SaveBeneficiaryViewModel>()
+				.ForMember(vm => vm.HasError, opt => opt.Ignore())
+				.ForMember(vm => vm.Error, opt => opt.Ignore())
 				.ReverseMap();
 			#endregion
 		}
