@@ -13,10 +13,11 @@ namespace InternetBanking.Infraestructure.Persistence.Repositories
 			_context = context;
 		}
 
-		public virtual async Task AddAsync(TEntity entity)
+		public virtual async Task<TEntity> AddAsync(TEntity entity)
 		{
 			await _context.Set<TEntity>().AddAsync(entity);
 			await _context.SaveChangesAsync();
+			return entity;
 		}
 
 		public virtual async Task DeleteAsync(TEntity entity)

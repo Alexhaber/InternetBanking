@@ -34,14 +34,19 @@ namespace InternetBanking.Controllers
                 return View(vm);
             }
 
-            await _beneficiaryService.Add(vm);
+            var response = await _beneficiaryService.Add(vm);
+
+            if(response.HasError)
+            {
+                return View(response);
+            }
 
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Delete(string ownerId, string beneficiaryId)
+        public async Task<IActionResult> Delete(string userId, string beneficiaryId)
         {
-            return View(await _beneficiaryService.GetBeneficiaryById(ownerId, beneficiaryId));
+            return View(await _beneficiaryService.GetBeneficiaryById(userId, beneficiaryId));
         }
 
         [HttpPost]
