@@ -1,11 +1,14 @@
-﻿using InternetBanking.Core.Application.Interfaces.Services;
+﻿using AutoMapper.Configuration.Annotations;
+using Azure;
+using InternetBanking.Core.Application.Dtos.User;
+using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.ViewModels.Account;
 using InternetBanking.Infraestructure.Identity.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace InternetBanking.Infraestructure.Identity.Services
 {
-	public class AccountService : IAccountService
+    public class AccountService : IAccountService
 	{
 		private readonly UserManager<AppUser> _userManager;
 		private readonly SignInManager<AppUser> _signInManager;
@@ -55,6 +58,19 @@ namespace InternetBanking.Infraestructure.Identity.Services
 		public async Task SignOutAsync()
 		{
 			await _signInManager.SignOutAsync();
+		}
+		public async Task<UserResponse> GetUserById(string id)
+		{
+			var user = await _userManager.FindByIdAsync(id);
+
+			return new UserResponse
+			{
+				Id = id,
+				FirstName = user.FirstName,
+				LastName = user.LastName,
+				Cedula = user.Cedula,
+				Email = user.Email
+			};
 		}
 	}
 }

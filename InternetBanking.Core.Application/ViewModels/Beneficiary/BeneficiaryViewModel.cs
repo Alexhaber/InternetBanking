@@ -2,7 +2,7 @@
 {
 	public class BeneficiaryViewModel
 	{
-		public string OwnerAccountId { get; set; }
+		public string UserId { get; set; }
 		public string BeneficiaryAccountId { get; set; }
         public string BeneficiaryName { get; set; }
     }

@@ -2,7 +2,7 @@
 {
 	public class Beneficiary
 	{
-		public string OwnerAccountId { get; set; }
+		public string UserId { get; set; }
         public string BeneficiaryAccountId { get; set; }
     }
 }

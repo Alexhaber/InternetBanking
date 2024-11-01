@@ -1,0 +1,34 @@
+﻿@using InternetBanking.Core.Application.ViewModels.Beneficiary
+@model List<BeneficiaryViewModel>
+
+<div class="row">
+	<div class="col-md-3 offset-9">
+		<a asp-action="Create" class="btn btn-primary">Add beneficiary</a>
+	</div>
+</div>
+<div class="row">
+	@if(Model == null || Model.Count == 0)
+	{
+		<h2>No beneficiaries added</h2>
+	}
+	else
+	{
+		@foreach(var beneficiary in Model)
+		{
+			<div class="col-md-4 mb-3">
+				<div class="card">
+					<div class="card-body">
+						<p class="card-text text-primary">@beneficiary.BeneficiaryName</p>
+						<p class="card-text mb-2">@beneficiary.BeneficiaryAccountId</p>
+						<a 
+							class="btn btn-sm btn-outline-danger" 
+							asp-action="Delete"
+							asp-route-ownerId=@beneficiary.UserId
+							asp-route-beneficiaryId="@beneficiary.BeneficiaryAccountId">Delete
+						</a>
+					</div>
+				</div>
+			</div>
+		}
+	}
+</div>
