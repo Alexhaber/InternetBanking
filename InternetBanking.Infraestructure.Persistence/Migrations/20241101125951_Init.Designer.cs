@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InternetBanking.Infraestructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241028223516_Init")]
+    [Migration("20241101125951_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -27,11 +27,11 @@ namespace InternetBanking.Infraestructure.Persistence.Migrations
 
             modelBuilder.Entity("InternetBanking.Core.Domain.Entities.Beneficiary", b =>
                 {
-                    b.Property<int>("OwnerAccountId")
-                        .HasColumnType("int");
+                    b.Property<string>("OwnerAccountId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("BeneficiaryAccountId")
-                        .HasColumnType("int");
+                    b.Property<string>("BeneficiaryAccountId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("OwnerAccountId", "BeneficiaryAccountId");
 

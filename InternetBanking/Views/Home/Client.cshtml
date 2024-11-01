@@ -7,7 +7,7 @@
 	<div class="row">
 		@foreach(var account in Model.SavingAccounts)
 		{
-			<div class="col-md-4">
+			<div class="col-md-4 mb-3">
 				<div class="card">
 					<div class="card-body">
 						<p class="card-text text-primary">Saving Account</p>
@@ -27,7 +27,7 @@
 		<div class="row">
 			@foreach (var card in Model.CreditCards)
 			{
-				<div class="col-md-4">
+				<div class="col-md-4 mb-3">
 					<div class="card">
 						<div class="card-body">
 							<p class="card-text text-warning">Credit Card</p>
@@ -48,10 +48,10 @@
 		<div class="row">
 			@foreach (var loan in Model.Loans)
 			{
-				<div class="col-md-4">
+				<div class="col-md-4 mb-3">
 					<div class="card">
 						<div class="card-body">
-							<p class="text-primary">Loan</p>
+							<p class="card-text text-danger">Loan</p>
 							<div class="d-flex justify-content-between">
 								<p class="card-text">DOP | @loan.Debt.ToString("F2")</p>
 								<p class="card-text"><small class="text-secondary">Deuda pendiente</small></p>
