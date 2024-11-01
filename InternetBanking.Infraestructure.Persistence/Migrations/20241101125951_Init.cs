@@ -15,8 +15,8 @@ namespace InternetBanking.Infraestructure.Persistence.Migrations
                 name: "Beneficiaries",
                 columns: table => new
                 {
-                    OwnerAccountId = table.Column<int>(type: "int", nullable: false),
-                    BeneficiaryAccountId = table.Column<int>(type: "int", nullable: false)
+                    OwnerAccountId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    BeneficiaryAccountId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {

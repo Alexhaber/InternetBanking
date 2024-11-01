@@ -12,8 +12,12 @@ builder.Services.AddPersistenceInfraestructureLayer(builder.Configuration);
 
 var app = builder.Build();
 
-await app.Services.SeedIdentityDbAsync();
-await app.Services.SeedSavingAccountDefaulClient();
+var userId = await app.Services.SeedIdentityDbAsync();
+
+if(userId != null)
+{
+	await app.Services.SeedProductDefaulClient(userId);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

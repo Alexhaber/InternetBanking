@@ -6,7 +6,7 @@ namespace InternetBanking.Infraestructure.Identity.Seeds
 {
 	public class DefaultClient
 	{
-		public static async Task SeedAsync(UserManager<AppUser> userManager)
+		public static async Task<string> SeedAsync(UserManager<AppUser> userManager)
 		{
 			var defaultUser = new AppUser
 			{
@@ -24,7 +24,11 @@ namespace InternetBanking.Infraestructure.Identity.Seeds
 			{
 				await userManager.CreateAsync(defaultUser, "123Pa$$word!");
 				await userManager.AddToRoleAsync(defaultUser, Roles.Client.ToString());
+
+				user = defaultUser;
 			}
+
+			return user.Id;
 		}
 	}
 }

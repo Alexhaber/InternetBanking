@@ -49,7 +49,7 @@ namespace InternetBanking.Infraestructure.Identity
 			#endregion
 		}
 
-		public static async Task SeedIdentityDbAsync(this IServiceProvider serviceProvider)
+		public static async Task<string?> SeedIdentityDbAsync(this IServiceProvider serviceProvider)
 		{
 			using (var scope = serviceProvider.CreateScope())
 			{
@@ -62,11 +62,11 @@ namespace InternetBanking.Infraestructure.Identity
 
 					await DefaultRoles.SeedAsync(roleManager);
 					await DefaultAdmin.SeedAsync(userManager);
-					await DefaultClient.SeedAsync(userManager);
+					return await DefaultClient.SeedAsync(userManager);
 				}
 				catch (Exception e)
 				{
-
+					return null;
 				}
 			}
 		}
