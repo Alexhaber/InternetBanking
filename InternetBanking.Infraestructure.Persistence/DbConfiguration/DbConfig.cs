@@ -36,8 +36,8 @@ namespace InternetBanking.Infraestructure.Persistence.DbConfiguration
 
 			#region Beneficiary
 			modelBuilder.Entity<Beneficiary>().ToTable("Beneficiaries");
-			modelBuilder.Entity<Beneficiary>().HasKey(b => new {b.OwnerAccountId, b.BeneficiaryAccountId});
-			modelBuilder.Entity<Beneficiary>().Property(b => b.OwnerAccountId).IsRequired();
+			modelBuilder.Entity<Beneficiary>().HasKey(b => new {b.UserId, b.BeneficiaryAccountId});
+			modelBuilder.Entity<Beneficiary>().Property(b => b.UserId).IsRequired();
 			modelBuilder.Entity<Beneficiary>().Property(b => b.BeneficiaryAccountId).IsRequired();
 			#endregion
 

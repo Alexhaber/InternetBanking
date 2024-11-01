@@ -1,10 +1,12 @@
-﻿using InternetBanking.Core.Application.ViewModels.Account;
+﻿using InternetBanking.Core.Application.Dtos.User;
+using InternetBanking.Core.Application.ViewModels.Account;
 
 namespace InternetBanking.Core.Application.Interfaces.Services
 {
-	public interface IAccountService
+    public interface IAccountService
 	{
 		Task<LoginViewModel> AuthenticateAsync(LoginViewModel vm);
 		Task SignOutAsync();
+		Task<UserResponse> GetUserById(string id);
 	}
 }
