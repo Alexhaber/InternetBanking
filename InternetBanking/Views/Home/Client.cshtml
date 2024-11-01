@@ -1,0 +1,65 @@
+﻿@using InternetBanking.Core.Application.ViewModels.Home
+@model HomeClientViewModel
+
+<div class="container">
+	<h2>Accounts</h2>
+	<hr />
+	<div class="row">
+		@foreach(var account in Model.SavingAccounts)
+		{
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-body">
+						<p class="card-text text-primary">Saving Account</p>
+						<div class="d-flex justify-content-between">
+							<p class="card-text">DOP | @account.Monto.ToString("F2")</p>
+							<p class="card-text"><small class="text-secondary">Balance disponible</small></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		}
+	</div>
+	@if (Model.CreditCards != null && Model.CreditCards.Count > 0)
+	{
+		<h2>Credit Cards</h2>
+		<hr />
+		<div class="row">
+			@foreach (var card in Model.CreditCards)
+			{
+				<div class="col-md-4">
+					<div class="card">
+						<div class="card-body">
+							<p class="card-text text-warning">Credit Card</p>
+							<div class="d-flex justify-content-between">
+								<p class="card-text">DOP | @card.Debt.ToString("F2")</p>
+								<p class="card-text"><small class="text-secondary">Deuda pendiente</small></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	}
+	@if(Model.Loans != null && Model.Loans.Count > 0)
+	{
+		<h2>Loans</h2>
+		<hr />
+		<div class="row">
+			@foreach (var loan in Model.Loans)
+			{
+				<div class="col-md-4">
+					<div class="card">
+						<div class="card-body">
+							<p class="text-primary">Loan</p>
+							<div class="d-flex justify-content-between">
+								<p class="card-text">DOP | @loan.Debt.ToString("F2")</p>
+								<p class="card-text"><small class="text-secondary">Deuda pendiente</small></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			}
+		</div>
+	}
+</div>
