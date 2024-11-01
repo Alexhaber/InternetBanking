@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using InternetBanking.Core.Application.ViewModels.Beneficiary;
 using InternetBanking.Core.Application.ViewModels.CreditCard;
 using InternetBanking.Core.Application.ViewModels.Loan;
 using InternetBanking.Core.Application.ViewModels.SavingAccount;
@@ -24,6 +25,15 @@ namespace InternetBanking.Core.Application.Mappings
 			#region Loans
 			CreateMap<Loan, LoanViewModel>()
 				.ForMember(vm => vm.Debt, opt => opt.Ignore())
+				.ReverseMap();
+			#endregion
+
+			#region Beneficary
+			CreateMap<Beneficiary, BeneficiaryViewModel>()
+				.ForMember(vm => vm.BeneficiaryName, opt => opt.Ignore())
+				.ReverseMap();
+
+			CreateMap<Beneficiary, SaveBeneficiaryViewModel>()
 				.ReverseMap();
 			#endregion
 		}
