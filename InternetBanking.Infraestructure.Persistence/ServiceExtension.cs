@@ -5,7 +5,6 @@ using InternetBanking.Infraestructure.Persistence.Seeds;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace InternetBanking.Infraestructure.Persistence
 {
@@ -27,6 +26,9 @@ namespace InternetBanking.Infraestructure.Persistence
 
 			#region Repositories
 			services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+			services.AddTransient<ISavingAccountRepository, SavingAccountRepository>();
+			services.AddTransient<ICreditCardRepository, CreditCardRepository>();
+			services.AddTransient<ILoanRepository, LoanRepository>();
 			#endregion
 		}
 

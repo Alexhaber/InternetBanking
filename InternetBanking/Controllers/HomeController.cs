@@ -1,24 +1,29 @@
+using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace InternetBanking.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
+		private readonly IHomeService _homeService;
 
-		public HomeController(ILogger<HomeController> logger)
+        public HomeController(IHomeService homeService)
+        {
+            _homeService = homeService;
+        }
+
+		[Authorize(Roles = "Client")]
+		public async Task<IActionResult> Client()
 		{
-			_logger = logger;
+			var clientId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			return View(await _homeService.GetProductsByClientIdAsync(clientId));
 		}
 
-		public IActionResult Index()
-		{
-			return View();
-		}
-
-		public IActionResult Privacy()
+        public IActionResult Index()
 		{
 			return View();
 		}

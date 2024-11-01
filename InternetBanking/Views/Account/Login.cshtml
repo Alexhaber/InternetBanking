@@ -1,0 +1,36 @@
+﻿@using InternetBanking.Core.Application.ViewModels.Account
+@model LoginViewModel
+
+<div class="row mt-5">
+	<div class="col-4 offset-4">
+		<div class="card shadow-sm">
+			<div class="card-body p-4">
+				<h3 class="card-title text-center mb-3">Log In</h3>
+				@if (Model.HasError)
+				{
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						@Model.Error
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				}
+				<form asp-action="Login">
+					<div class="form-floating mb-3">
+						<input asp-for="Email" class="form-control" placeholder="email">
+						<label asp-for="Email">Email address</label>
+						<span asp-validation-for="Email" class="text-danger"></span>
+					</div>
+					<div class="form-floating mb-3">
+						<input asp-for="Password" class="form-control" placeholder="password">
+						<label asp-for="Password">Password</label>
+						<span asp-validation-for="Password" class="text-danger"></span>
+					</div>
+					<button type="submit" class="btn btn-primary w-100">Iniciar Sesion</button>
+				</form>
+				<small class="d-block text-center mt-3">
+					Don't have an account?
+					<a asp-action="SignUp" class="text-decoration-none">Register</a>
+				</small>
+			</div>
+		</div>
+	</div>
+</div>

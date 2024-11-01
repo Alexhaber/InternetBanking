@@ -1,0 +1,20 @@
+﻿<div class="row mt-5">
+	<div class="col-8 offset-2">
+		<div class="card shadow-sm">
+			<div class="card-body">
+				<div class="alert alert-danger" role="alert">
+					<h2>No tiene permisos para acceder a esta seccion -
+						@if(User.IsInRole("Admin"))
+						{
+							<a class="btn btn-warning" asp-controller="Home" asp-action="Index">Home</a>
+						} 
+						else
+						{
+							<a class="btn btn-warning" asp-controller="Home" asp-action="Client">Home</a>
+						}
+					</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

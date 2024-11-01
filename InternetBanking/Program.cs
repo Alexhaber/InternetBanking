@@ -1,3 +1,4 @@
+using InternetBanking.Core.Application;
 using InternetBanking.Infraestructure.Identity;
 using InternetBanking.Infraestructure.Persistence;
 
@@ -5,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddApplicationLayer();
 builder.Services.AddIdentityInfraestructureLayer(builder.Configuration);
 builder.Services.AddPersistenceInfraestructureLayer(builder.Configuration);
 
@@ -32,6 +34,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
 	name: "default",
-	pattern: "{controller=Home}/{action=Index}/{id?}");
+	pattern: "{controller=Account}/{action=Login}/{id?}");
 
 await app.RunAsync();
