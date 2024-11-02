@@ -16,6 +16,7 @@
                 {
                     if(User.IsInRole("Admin"))
                     {
+                        //posible error ya que solo hay dos views y lo mas probable es que index es para los admins
                         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Admin">InternetBanking</a>
                     }
                     else
