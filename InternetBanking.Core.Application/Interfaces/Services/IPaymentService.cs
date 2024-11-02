@@ -3,7 +3,7 @@ using InternetBanking.Core.Domain.Entities;
 
 namespace InternetBanking.Core.Application.Interfaces.Services
 {
-    public interface ITransactionService
+    public interface IPaymentService
     {
         Task<DepositResponse> MakeCashAdvance(CreditCard card, SavingAccount savingAccount, decimal deposit);
 

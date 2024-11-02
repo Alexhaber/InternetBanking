@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace InternetBanking.Core.Application.Services
 {
-    public class TransactionService : ITransactionService
+    public class PaymentService : IPaymentService
 	{
 		private readonly ITransactionRepository _transactionRepository;
 		private readonly IMapper _mapper;
 
-		public TransactionService(ITransactionRepository transactionRepository, IMapper mapper)
+		public PaymentService(ITransactionRepository transactionRepository, IMapper mapper)
 		{
 			_transactionRepository = transactionRepository;
 			_mapper = mapper;
