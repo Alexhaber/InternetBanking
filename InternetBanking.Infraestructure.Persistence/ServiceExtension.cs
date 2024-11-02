@@ -30,6 +30,7 @@ namespace InternetBanking.Infraestructure.Persistence
 			services.AddTransient<ICreditCardRepository, CreditCardRepository>();
 			services.AddTransient<ILoanRepository, LoanRepository>();
 			services.AddTransient<IBeneficiaryRepository, BeneficiaryRepository>();
+			services.AddTransient<ITransactionRepository, TransactionRepository>();
 			#endregion
 		}
 
