@@ -1,0 +1,46 @@
+﻿@using InternetBanking.Core.Application.ViewModels.Payment
+@model ExpresoPayViewModel
+
+<div class="row">
+	<div class="col-md-6 offset-3">
+		<div class="card">
+			<div class="card-header">
+				<h3 class="card-title">Expreso Payment</h3>
+			</div>
+			<div class="card-body">
+				@if (Model.HasError)
+				{
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						@Model.Error
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				}
+				<form asp-action="ExpresoPayment">
+					<div class="mb-3">
+						<label asp-for="DestinyAccountId" class="form-label"> Destiny Account Id</label>
+						<input asp-for="DestinyAccountId" class="form-control" placeholder="Destiny account Id" />
+						<span asp-validation-for="DestinyAccountId" class="text-danger"></span>
+					</div>
+					<div class="mb-3">
+						<label asp-for="OriginAccountId" class="form-label"> Origin Account Id</label>
+						<select asp-for=OriginAccountId class="form-select">
+							<option value="">Select an account</option>
+							@foreach(var account in Model.Accounts)
+							{
+								<option value=@account.Id>@account.Id</option>
+							}
+						</select>
+						<span asp-validation-for="OriginAccountId" class="text-danger"></span>
+					</div>
+					<div class="mb-3">
+						<label asp-for="Monto" class="form-label">Monto</label>
+						<input asp-for="Monto" class="form-control" />
+						<span asp-validation-for="Monto" class="text-danger"></span>
+					</div>
+					<button type="submit" class="btn btn-primary">Realizar</button>
+					<a asp-controller="Home" asp-action="Client" class="btn btn-warning">Cancel</a>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

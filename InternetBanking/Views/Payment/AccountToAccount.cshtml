@@ -1,78 +1,56 @@
 ﻿@using InternetBanking.Core.Domain.Entities
 
 @{
-    //var userCards = ViewBag.UserCards as List<CreditCard>;
     var userSaveAccounts = ViewBag.UserSaveAccounts as List<SavingAccount>;
 }
-
-<div class="card">
-    <div class="card-header">
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success">
-                @TempData["SuccessMessage"]
+<div class="row">
+    <div class="col-md-6 offset-3">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Account To Account</h3>
             </div>
-        }
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger">
-                @TempData["ErrorMessage"]
+            <div class="card-body">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+                <form asp-controller="Payment" asp-action="AccountToAccount">
+                    <div class="mb-3">
+                        <label class="form-label" for="tarjeta">Cuenta origen</label>
+                        <select class="form-select" id="tarjeta" name="FromAcoountId">
+                            <option value="">Select source account</option>
+                            @foreach (var obj in userSaveAccounts)
+                            {
+                                <option value="@obj.Id">@obj.Id</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="cuenta">Cuenta destino</label>
+                        <select class="form-select" id="cuenta" name="ToAccountId">
+                            <option value="">Select destiny account</option>
+                            @foreach (var obj in userSaveAccounts)
+                            {
+                                <option value="@obj.Id">@obj.Id</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="amount">Monto</label>
+                        <input class="form-control" type="number" id="amount" name="Amount" step="0.01" min="0" required />
+                    </div>
+                    <button class="btn btn-primary" type="submit">Realizar</button>
+                    <a asp-controller="Home" asp-action="Client" class="btn btn-warning">Cancelar</a>
+                </form>
             </div>
-        }
-    </div>
-
-    <div class="card-body">
-
-        <form method="post" asp-controller="Payment" asp-action="AccountToAccount">
-            <div>
-                <div>
-                    <label for="tarjeta">Tarjeta de crédito:</label>
-                    <select id="tarjeta" name="FromAcoountId">
-                        @{
-                            try
-                            {
-                                foreach (var obj in userSaveAccounts)
-                                {
-                                    <option value="@obj.Id">@obj.Id</option>
-                                }
-                            }
-                            catch
-                            {
-
-                            }
-                        }
-                    </select>
-                </div>
-                <br />
-                <div>
-                    <label for="cuenta">Depositar a:</label>
-                    <select id="cuenta" name="ToAccountId">
-                        @{
-                            try
-                            {
-                                foreach (var obj in userSaveAccounts)
-                                {
-                                    <option value="@obj.Id">@obj.Id</option>
-                                }
-
-                            }
-                            catch
-                            {
-
-                            }
-                        }
-                    </select>
-                </div>
-                <br />
-                <div>
-                    <label for="amount">Monto:</label>
-                    <input type="number" id="amount" name="Amount" step="0.01" min="0" required />
-                </div>
-            </div>
-            <br />
-            <button class="btn btn-outline-success" type="submit">Confirmar</button>
-            <a class="btn btn-outline-danger" href="#">Cancelar</a>
-        </form>
-
+        </div>
     </div>
 </div>

@@ -37,9 +37,6 @@ namespace InternetBanking.Core.Application.Mappings
 				.ForMember(vm => vm.HasError, opt => opt.Ignore())
 				.ForMember(vm => vm.Error, opt => opt.Ignore())
 				.ReverseMap();
-
-			//CreateMap<Transaction, TransactionViewModel>
-
 			#endregion
 		}
 	}
