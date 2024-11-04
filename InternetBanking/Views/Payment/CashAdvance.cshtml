@@ -4,80 +4,54 @@
     var userCards = ViewBag.UserCards as List<CreditCard>;
     var userSaveAccounts = ViewBag.UserSaveAccounts as List<SavingAccount>;
 }
-
-<head>
-    </<style>
-    </style>
-</head>
-
-<div class="card row-cols-3 justify-content-center">
-    <div class="card-header">
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success">
-                @TempData["SuccessMessage"]
+<div class="row">
+    <divc class="col-md-6 offset-3">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Cash Advance</h3>
             </div>
-        }
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger">
-                @TempData["ErrorMessage"]
+            <div class="card-body">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
+                <form asp-controller="Payment" asp-action="CashAdvance">
+                    <div class="mb-3">
+                        <label class="form-label" for="tarjeta">Tarjeta de crédito</label>
+                        <select class="form-select" id="tarjeta" name="CreditCardId">
+                            <option value="">Select a credit card</option>
+                            @foreach (var obj in userCards)
+                            {
+                                <option value="@obj.Id">@obj.Id</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="cuenta">Cuenta Destino</label>
+                        <select class="form-select" id="cuenta" name="SavingAccountId">
+                            <option value="">Select an account</option>
+                            @foreach (var obj in userSaveAccounts)
+                            {
+                                <option value="@obj.Id">@obj.Id</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="amount">Monto</label>
+                        <input class="form-control" type="number" id="amount" name="Amount" step="0.01" min="0" required />
+                    </div>
+                    <button class="btn btn-primary" type="submit">Realizar</button>
+                    <a asp-controller="Home" asp-action="Client" class="btn btn-warning">Cancelar</a>
+                </form>
             </div>
-        }
-    </div>
-
-    <div class="card-body">
-
-        <form method="post" asp-controller="Payment" asp-action="CashAdvance">
-            <div>
-                <div>
-                    <label class="form-label" for="tarjeta">Tarjeta de crédito:</label>
-                    <select class="form-select" id="tarjeta" name="CreditCardId">
-                        @{
-                            try
-                            {                       
-                                foreach (var obj in userCards)
-                                {
-                                        <option value="@obj.Id">@obj.Id</option>
-                                }
-                            }
-                            catch
-                            {
-                                
-                            }
-                        }
-                    </select>
-                </div>
-                <br />
-                <div>
-                    <label class="form-label" for="cuenta">Depositar a:</label>
-                    <select class="form-select" id="cuenta" name="SavingAccountId">
-                        @{
-                            try
-                            {
-                                foreach (var obj in userSaveAccounts)
-                                {
-                                    <option value="@obj.Id">@obj.Id</option>
-                                }
-
-                            }
-                            catch
-                            {
-                                
-                            }
-                        }
-                    </select>
-                </div>
-                <br />
-                <div>
-                    <label for="amount">Monto:</label>
-                    <input type="number" id="amount" name="Amount" step="0.01" min="0" required />
-                </div>
-            </div>
-            <br />
-            <button class="btn btn-outline-success" type="submit">Confirmar</button>
-            <a class="btn btn-outline-danger" href="#">Cancelar</a>
-        </form>
-
-    </div>
+        </div>
+    </divc>
 </div>

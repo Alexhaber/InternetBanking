@@ -1,0 +1,37 @@
+﻿@using InternetBanking.Core.Application.ViewModels.Payment
+@model ExpresoPayViewModel
+
+<div class="row">
+	<div class="col-md-6 offset-3">
+		<div class="card">
+			<div class="card-header">
+				<h3 class="card-title">Expreso Payment</h3>
+			</div>
+			<div class="card-body">
+				<p class="card-text">Numero de cuenta destino: @Model.DestinyAccountId</p>
+				<p class="card-text">Propietario de cuenta destino: @Model.DestinyAccountOwnerName</p>
+				<p class="card-text">Monto: @Model.Monto</p>
+				<p class="card-text">Desde la cuenta: @Model.OriginAccountId</p>
+
+				@if(Model.IsSucceeded)
+				{
+					<div class="alert alert-success alert-dismissible fade show" role="alert">
+						Successfull payment
+						<a asp-controller="Home" asp-action="Client" class="btn btn-warning">Home</a>
+					</div>
+				}
+				else
+				{
+					<form asp-action="ExpresoPaymentPost">
+						<input type="hidden" asp-for=DestinyAccountId />
+						<input type="hidden" asp-for=OriginAccountId />
+						<input type="hidden" asp-for=Monto />
+						<p class="card-text">está seguro de realizar la transacción?</p>
+						<button type="submit" class="btn btn-primary">Aceptar</button>
+						<a asp-controller="Home" asp-action="Client" class="btn btn-warning">Cancel</a>
+					</form>
+				}
+			</div>
+		</div>
+	</div>
+</div>

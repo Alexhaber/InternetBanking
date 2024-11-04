@@ -1,0 +1,59 @@
+﻿@using InternetBanking.Core.Application.ViewModels.Payment
+@model BeneficiaryPayViewModel
+
+<div class="row">
+	<div class="col-md-6 offset-3">
+		<div class="card">
+			<div class="card-header">
+				<h3 class="card-title">Beneficiary Payment</h3>
+			</div>
+			<div class="card-body">
+				@if (Model.HasError)
+				{
+					<div class="alert alert-danger alert-dismissible fade show" role="alert">
+						@Model.Error
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+				}
+				<form asp-action="BeneficiaryPayment">
+					<div class="mb-3">
+						<label asp-for="BeneficiaryAccountId" class="form-label">Beneficiary</label>
+						<select asp-for=BeneficiaryAccountId class="form-select">
+							<option value="">Select a beneficiary</option>
+							@if (Model.Beneficiaries == null || Model.Beneficiaries.Count == 0)
+							{
+								<option value="">No tienes beneficiarios</option>
+							}
+							else
+							{
+								@foreach (var beneficiary in Model.Beneficiaries)
+								{
+									<option value=@beneficiary.BeneficiaryAccountId>@beneficiary.BeneficiaryName</option>
+								}
+							}
+						</select>
+						<span asp-validation-for="BeneficiaryAccountId" class="text-danger"></span>
+					</div>
+					<div class="mb-3">
+						<label asp-for="AccountId" class="form-label">Account</label>
+						<select asp-for=AccountId class="form-select">
+							<option value="">Select an account</option>
+							@foreach (var account in Model.Accounts)
+							{
+								<option value=@account.Id>@account.Id</option>
+							}
+						</select>
+						<span asp-validation-for="AccountId" class="text-danger"></span>
+					</div>
+					<div class="mb-3">
+						<label asp-for="Monto" class="form-label">Monto</label>
+						<input asp-for="Monto" class="form-control" />
+						<span asp-validation-for="Monto" class="text-danger"></span>
+					</div>
+					<button type="submit" class="btn btn-primary">Realizar</button>
+					<a asp-controller="Home" asp-action="Client" class="btn btn-warning">Cancel</a>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

@@ -43,10 +43,10 @@
                                             Pagos
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" @* asp-controller="Payment" asp-action="CreditCard" *@ href="#">Expreso</a></li>
-                                            <li><a class="dropdown-item" asp-area="" asp-controller="Payment" asp-action="CreditCard">Credit Card</a></li>
-                                            <li><a class="dropdown-item" @* asp-controller="Payment" asp-action="CreditCard" *@ href="#">Loan</a></li>
-                                            <li><a class="dropdown-item" @* asp-controller="Payment" asp-action="CreditCard" *@ href="#">Beneficiary</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Payment" asp-action="ExpresoPayment">Expreso</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Payment" asp-action="CreditCardPayment">Credit Card</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Payment" asp-action="LoanPayment">Loan</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Payment" asp-action="BeneficiaryPayment">Beneficiary</a></li>
                                         </ul>                            
                                     </div>
                                 </li>
@@ -57,7 +57,7 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="CashAdvance">Cash Advance</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Transfer</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="AccountToAccount">Between Accounts</a>
                                 </li>
                             }
                             <li class="nav-item  ms-auto">

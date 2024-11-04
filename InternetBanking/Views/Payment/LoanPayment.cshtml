@@ -1,0 +1,69 @@
+﻿@using InternetBanking.Core.Application.ViewModels.Payment
+@model LoanPayViewModel
+
+<div class="row">
+	<div class="col-md-6 offset-3">
+		<div class="card">
+			<div class="card-header">
+				<h3 class="card-title">Loan Payment</h3>
+			</div>
+			<div class="card-body">
+				@if (Model.IsSucceeded)
+				{
+					<div class="alert alert-success alert-dismissible fade show" role="alert">
+						Successfull payment
+						<a asp-controller="Home" asp-action="Client" class="btn btn-warning">Home</a>
+					</div>
+				}
+				else
+				{
+					@if (Model.HasError)
+					{
+						<div class="alert alert-danger alert-dismissible fade show" role="alert">
+							@Model.Error
+							<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+						</div>
+					}
+					<form asp-action="LoanPayment">
+						<div class="mb-3">
+							<label asp-for="LoanId" class="form-label">Loan</label>
+							<select asp-for=LoanId class="form-select">
+								<option value="">Select a loan</option>
+								@if (Model.Loans == null || Model.Loans.Count == 0)
+								{
+									<option value="">No tienes prestamos</option>
+								}
+								else
+								{
+									@foreach (var loan in Model.Loans)
+									{
+										<option value=@loan.Id>@loan.Id</option>
+									}
+								}
+							</select>
+							<span asp-validation-for="LoanId" class="text-danger"></span>
+						</div>
+						<div class="mb-3">
+							<label asp-for="AccountId" class="form-label">Account</label>
+							<select asp-for=AccountId class="form-select">
+								<option value="">Select an account</option>
+								@foreach (var account in Model.Accounts)
+								{
+									<option value=@account.Id>@account.Id</option>
+								}
+							</select>
+							<span asp-validation-for="AccountId" class="text-danger"></span>
+						</div>
+						<div class="mb-3">
+							<label asp-for="Monto" class="form-label">Monto</label>
+							<input asp-for="Monto" class="form-control" />
+							<span asp-validation-for="Monto" class="text-danger"></span>
+						</div>
+						<button type="submit" class="btn btn-primary">Realizar</button>
+						<a asp-controller="Home" asp-action="Client" class="btn btn-warning">Cancel</a>
+					</form>
+				}
+			</div>
+		</div>
+	</div>
+</div>
