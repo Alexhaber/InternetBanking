@@ -14,6 +14,7 @@ namespace InternetBanking.Core.Application
 			services.AddTransient(typeof(IGenericService<,,>), typeof(GenericService<,,>));
 			services.AddTransient<IHomeService, HomeService>();
 			services.AddTransient<IBeneficiaryService, BeneficiaryService>();
+			services.AddTransient<IPaymentService, PaymentService>();
 			#endregion
 		}
 	}

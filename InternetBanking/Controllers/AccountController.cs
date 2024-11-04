@@ -15,6 +15,16 @@ namespace InternetBanking.Controllers
 
 		public IActionResult Login()
 		{
+			if (User.Identity.IsAuthenticated)
+			{
+				if (User.IsInRole("Admin"))
+				{
+					return RedirectToAction("Index", "Home"); //vista de admin
+				}
+
+				return RedirectToAction("Client", "Home"); //vista de cliente
+			}
+
 			return View(new LoginViewModel());
 		}
 
