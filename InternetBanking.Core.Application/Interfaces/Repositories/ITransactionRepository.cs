@@ -5,9 +5,6 @@ namespace InternetBanking.Core.Application.Interfaces.Repositories
 {
     public interface ITransactionRepository : IGenericRepository<Transaction>
     {
-        Task<DepositResponse> MakeCashAdvance(CreditCard card, SavingAccount savingAccount, decimal deposit);
-
-        Task<DepositResponse> InterAccountTransaction(SavingAccount sender, SavingAccount receiver, decimal deposit);
 
 	}
 }
