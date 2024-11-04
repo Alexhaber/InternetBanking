@@ -1,0 +1,78 @@
+﻿@using InternetBanking.Core.Domain.Entities
+
+@{
+    var userCards = ViewBag.UserCards as List<CreditCard>;
+    var userSaveAccounts = ViewBag.UserSaveAccounts as List<SavingAccount>;
+}
+
+<div class="card">
+    <div class="card-header">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["SuccessMessage"]
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+    </div>
+
+    <div class="card-body">
+
+        <form method="post" asp-controller="Payment" asp-action="CashAdvance">
+            <div>
+                <div>
+                    <label for="tarjeta">Tarjeta de crédito:</label>
+                    <select id="tarjeta" name="CreditCardId">
+                        @{
+                            try
+                            {                       
+                                foreach (var obj in userCards)
+                                {
+                                        <option value="@obj.Id">@obj.Id</option>
+                                }
+                            }
+                            catch
+                            {
+                                
+                            }
+                        }
+                    </select>
+                </div>
+                <br />
+                <div>
+                    <label for="cuenta">Depositar a:</label>
+                    <select id="cuenta" name="SavingAccountId">
+                        @{
+                            try
+                            {
+                                foreach (var obj in userSaveAccounts)
+                                {
+                                    <option value="@obj.Id">@obj.Id</option>
+                                }
+
+                            }
+                            catch
+                            {
+                                
+                            }
+                        }
+                    </select>
+                </div>
+                <br />
+                <div>
+                    <label for="amount">Monto:</label>
+                    <input type="number" id="amount" name="Amount" step="0.01" min="0" required />
+                </div>
+            </div>
+            <br />
+            <button class="btn btn-outline-success" type="submit">Confirmar</button>
+            <a class="btn btn-outline-danger" href="#">Cancelar</a>
+        </form>
+
+    </div>
+</div>

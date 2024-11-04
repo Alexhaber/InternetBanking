@@ -43,18 +43,18 @@
                                             Pagos
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Expreso</a></li>
-                                            <li><a class="dropdown-item" href="#">Credit Card</a></li>
-                                            <li><a class="dropdown-item" href="#">Loan</a></li>
-                                            <li><a class="dropdown-item" href="#">Beneficiary</a></li>
-                                        </ul>
+                                            <li><a class="dropdown-item" @* asp-controller="Payment" asp-action="CreditCard" *@ href="#">Expreso</a></li>
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="Payment" asp-action="CreditCard">Credit Card</a></li>
+                                            <li><a class="dropdown-item" @* asp-controller="Payment" asp-action="CreditCard" *@ href="#">Loan</a></li>
+                                            <li><a class="dropdown-item" @* asp-controller="Payment" asp-action="CreditCard" *@ href="#">Beneficiary</a></li>
+                                        </ul>                            
                                     </div>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Beneficiary" asp-action="Index">Beneficiary</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Cash Advance</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="CashAdvance">Cash Advance</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Transfer</a>
