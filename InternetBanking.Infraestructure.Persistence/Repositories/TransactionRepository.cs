@@ -1,18 +1,10 @@
-﻿using InternetBanking.Core.Application.Dtos.Deposit;
-using InternetBanking.Core.Domain.Entities;
-using InternetBanking.Infraestructure.Persistence.Contexts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Transactions;
+﻿using InternetBanking.Infraestructure.Persistence.Contexts;
 using InternetBanking.Core.Application.Interfaces.Repositories;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using InternetBanking.Core.Domain.Entities;
 
 namespace InternetBanking.Infraestructure.Persistence.Repositories
 {
-    public class TransactionRepository : GenericRepository<InternetBanking.Core.Domain.Entities.Transaction>, ITransactionRepository
+    public class TransactionRepository : GenericRepository<Transaction>, ITransactionRepository
 	{
 
 		private readonly AppDbContext _context;
@@ -115,41 +107,40 @@ namespace InternetBanking.Infraestructure.Persistence.Repositories
 			var response = new DepositResponse();
 			response.HasError = false;
 
-			var FromAccount = await _context.SavingAccounts.FindAsync(sender.Id);
-			var ToAccount = await _context.SavingAccounts.FindAsync(receiver.Id);
+            try
+            {
+                var FromAccount = await _context.SavingAccounts.FindAsync(sender.Id);
+				var ToAccount = await _context.SavingAccounts.FindAsync(receiver.Id);
 
-			if (FromAccount == null)
-			{
-				response.HasError = true;
-				response.Error = $"Sender account not found";
-				//response.Error = $"Sender not found";
-				return response;
+				if (FromAccount == null)
+				{
+					response.HasError = true;
+					response.Error = $"Sender account not found";
+					//response.Error = $"Sender not found";
+					return response;
 
-			}
-			else if (ToAccount == null) 
-			{
-				response.HasError = true;
-				response.Error = $"No se encontro la cuenta destino";
-				return response;
-			}
+				}
+				else if (ToAccount == null)
+				{ 
+					response.HasError = true;
+					response.Error = $"No se encontro la cuenta destino";
+					return response;
+				}
 
-			if(sender.Monto < deposit)
-			{
-				response.HasError = true;
-				response.Error = $"El monto enviado no puede sobrepasar su saldo actual";
-				return response;
-			}
+				if(sender.Monto < deposit)
+				{
+					response.HasError = true;
+					response.Error = $"El monto enviado no puede sobrepasar su saldo actual";
+					return response;
+				}
 
-			var transaction = new InternetBanking.Core.Domain.Entities.Transaction
-			{
-				SourceProductId = sender.Id,
-				DestinationProductId = receiver.Id,
-				Monto = deposit,
-				Made = DateTime.Now,
-			};
-
-			try
-			{
+				var transaction = new InternetBanking.Core.Domain.Entities.Transaction
+				{
+					SourceProductId = sender.Id,
+					DestinationProductId = receiver.Id,
+					Monto = deposit,
+					Made = DateTime.Now,
+				};
 
 				using (var dbTransaction = await _context.Database.BeginTransactionAsync())
 				{

@@ -9,38 +9,31 @@
     <link rel="stylesheet" href="~/InternetBanking.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                @if(User.Identity.IsAuthenticated)
-                {
-                    if(User.IsInRole("Admin"))
+    @if(User.Identity.IsAuthenticated)
+    {
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                <div class="container">
+                    @if (User.IsInRole("Admin"))
                     {
-                        //posible error ya que solo hay dos views y lo mas probable es que index es para los admins
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Admin">InternetBanking</a>
+                    //posible error ya que solo hay dos views y lo mas probable es que index es para los admins
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Admin">InternetBanking</a>
                     }
                     else
                     {
-                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Client">InternetBanking</a>
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Client">InternetBanking</a>
                     }
-                }
-                else
-                {
-                    <a class="navbar-brand" asp-area="" asp-controller="Account" asp-action="Login">InternetBanking</a>
-                }
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        @if(User.Identity.IsAuthenticated)
-                        {
-                            if(User.IsInRole("Admin"))
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">User Adminitration</a>
-                                </li> 
+                                </li>
                             }
                             else
                             {
@@ -50,18 +43,18 @@
                                             Pagos
                                         </button>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="#">Expreso</a></li>
-                                            <li><a class="dropdown-item" href="#">Credit Card</a></li>
-                                            <li><a class="dropdown-item" href="#">Loan</a></li>
-                                            <li><a class="dropdown-item" href="#">Beneficiary</a></li>
-                                        </ul>
+                                            <li><a class="dropdown-item" @* asp-controller="Payment" asp-action="CreditCard" *@ href="#">Expreso</a></li>
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="Payment" asp-action="CreditCard">Credit Card</a></li>
+                                            <li><a class="dropdown-item" @* asp-controller="Payment" asp-action="CreditCard" *@ href="#">Loan</a></li>
+                                            <li><a class="dropdown-item" @* asp-controller="Payment" asp-action="CreditCard" *@ href="#">Beneficiary</a></li>
+                                        </ul>                            
                                     </div>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Beneficiary" asp-action="Index">Beneficiary</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Cash Advance</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Payment" asp-action="CashAdvance">Cash Advance</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Transfer</a>
@@ -70,12 +63,12 @@
                             <li class="nav-item  ms-auto">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="LogOut">Cerrar sesion</a>
                             </li>
-                        }
-                    </ul>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </header>
+            </nav>
+        </header>
+    }
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
