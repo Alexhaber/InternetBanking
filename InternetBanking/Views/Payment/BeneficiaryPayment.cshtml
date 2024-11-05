@@ -47,7 +47,7 @@
 					</div>
 					<div class="mb-3">
 						<label asp-for="Monto" class="form-label">Monto</label>
-						<input asp-for="Monto" class="form-control" />
+						<input asp-for="Monto" class="form-control" oninput="replaceDotWithComma(this)" />
 						<span asp-validation-for="Monto" class="text-danger"></span>
 					</div>
 					<button type="submit" class="btn btn-primary">Realizar</button>
@@ -57,3 +57,8 @@
 		</div>
 	</div>
 </div>
+<script>
+function replaceDotWithComma(input) {
+    input.value = input.value.replace('.', ',');
+}
+</script>

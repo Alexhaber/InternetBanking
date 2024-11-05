@@ -1,5 +1,4 @@
-﻿using InternetBanking.Core.Application.Interfaces.Repositories;
-using InternetBanking.Core.Application.Interfaces.Services;
+﻿using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.ViewModels.Payment;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,26 +6,14 @@ using System.Security.Claims;
 
 namespace InternetBanking.Controllers
 {
-    [Authorize(Roles = "Client")]
+	[Authorize(Roles = "Client")]
     public class PaymentController : Controller
 	{
-		IPaymentService _paymentService;
+		private readonly IPaymentService _paymentService;
 
-		//////////puede ser termporal por se si se van a crear servicios/////////
-		ICreditCardRepository _creditCardRepository;
-		ISavingAccountRepository _savingAccountRepository;
-		//___________________________________________________________________//
-
-		IAccountService _accountService;
-
-		public PaymentController(IPaymentService paymentService, IAccountService accountService, 
-		ICreditCardRepository creditCardRepository, ISavingAccountRepository savingAccountRepository)
+		public PaymentController(IPaymentService paymentService)
 		{
 			_paymentService = paymentService;
-			_accountService = accountService;
-			_creditCardRepository = creditCardRepository;
-			_savingAccountRepository = savingAccountRepository;
-
 		}
 
         public async Task<IActionResult> ExpresoPayment()
@@ -164,119 +151,62 @@ namespace InternetBanking.Controllers
 
 		public async Task<IActionResult> CashAdvance()
 		{
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var cardlist = await _creditCardRepository.GetCreditCardsByClientIdAsync(userId);
-			var saveAccountList = await _savingAccountRepository.GetAccountsByClientIdAsync(userId);
-
-
-            ViewBag.UserCards = cardlist;
-			ViewBag.UserSaveAccounts = saveAccountList;
-
-            return View();
+            return View(await _paymentService.GetCashAdvanceViewModelAsync(User.FindFirstValue(ClaimTypes.NameIdentifier)));
 		}
 
         [HttpPost]
-        public async Task<IActionResult> CashAdvance(string CreditCardId, string SavingAccountId, decimal Amount)
+        public async Task<IActionResult> CashAdvance(CashAdvanceViewModel vm)
         {
-            try
-            {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var cardlist = await _creditCardRepository.GetCreditCardsByClientIdAsync(userId);
-                var saveAccountList = await _savingAccountRepository.GetAccountsByClientIdAsync(userId);
+			if(!ModelState.IsValid)
+			{
+				var viewModel = await _paymentService.GetCashAdvanceViewModelAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+				vm.Accounts = viewModel.Accounts;
+				vm.CreditCards = viewModel.CreditCards;
+				return View(vm);
+			}
 
-                // Logica para procesar el pago
-                var creditCard = await _creditCardRepository.GetByIdAsync(CreditCardId);
-                var savingAccount = await _savingAccountRepository.GetByIdAsync(SavingAccountId);
+			var result = await _paymentService.MakeCashAdvance(vm);
 
-                if (creditCard == null || savingAccount == null)
-                {
-                    ViewBag.UserCards = cardlist;
-                    ViewBag.UserSaveAccounts = saveAccountList;
-                    ModelState.AddModelError("", "Tarjeta de crédito o cuenta de ahorros no válida.");
-                    return View(); // devuelve la vista con el error si algo no es válido.
-                }
+			if (result.HasError)
+			{
+				TempData["ErrorMessage"] = result.Error;
+				var viewModel = await _paymentService.GetCashAdvanceViewModelAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+				vm.Accounts = viewModel.Accounts;
+				vm.CreditCards = viewModel.CreditCards;
+				return View(vm);
+			}
 
-                // Implementar la lógica de pago usando el servicio de pago (_paymentService)
-                var result = await _paymentService.MakeCashAdvance(creditCard, savingAccount, Amount);
-
-                // determina la situacion del pago si no tiene error se manda al index, sino, se manda a la misma vista de cradit card
-                if (!result.HasError)
-                {
-
-                    ViewBag.UserCards = cardlist;
-                    ViewBag.UserSaveAccounts = saveAccountList;
-                    TempData["SuccessMessage"] = "El pago fue procesado exitosamente.";
-                    return View();
-                }
-                else
-                {
-                    
-
-                    ViewBag.UserCards = cardlist;
-                    ViewBag.UserSaveAccounts = saveAccountList;
-
-                    TempData["ErrorMessage"] = result.Error;
-                    return View();
-                }
-            }
-            catch(Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                return View();
-            }
-        }
+			TempData["SuccessMessage"] = "El pago fue procesado exitosamente.";
+			return View(vm);
+		}
 
         public async Task<IActionResult> AccountToAccount()
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var saveAccountList = await _savingAccountRepository.GetAccountsByClientIdAsync(userId);
-
-            ViewBag.UserSaveAccounts = saveAccountList;
-
-            return View();
+			return View(await _paymentService.GetAccountToAccountViewModelAsync(User.FindFirstValue(ClaimTypes.NameIdentifier))); ;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AccountToAccount(string FromAcoountId, string ToAccountId, decimal Amount)
+        public async Task<IActionResult> AccountToAccount(AccountToAccountViewModel vm)
         {
-            try
-            {
-                //la misma vaina pero con 2 cuentas
+			if (!ModelState.IsValid)
+			{
+				var viewModel = await _paymentService.GetAccountToAccountViewModelAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+				vm.Accounts = viewModel.Accounts;
+				return View(vm);
+			}
 
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var saveAccountList = await _savingAccountRepository.GetAccountsByClientIdAsync(userId);
-                var from = await _savingAccountRepository.GetByIdAsync(FromAcoountId);
-                var to = await _savingAccountRepository.GetByIdAsync(ToAccountId);
+			var result = await _paymentService.InterAccountTransaction(vm);
 
-                if (from == null || to == null)
-                {
-                    ViewBag.UserSaveAccounts = saveAccountList;
-                    TempData["ErrorMessage"] = "Tarjeta de crédito o cuenta de ahorros no válida";
-                    return View();
-                }
+			if (result.HasError)
+			{
+				TempData["ErrorMessage"] = result.Error;
+				var viewModel = await _paymentService.GetAccountToAccountViewModelAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+				vm.Accounts = viewModel.Accounts;
+				return View(vm);
+			}
 
-
-                var result = await _paymentService.InterAccountTransaction(from, to, Amount);
-
-                if (!result.HasError)
-                {
-                    ViewBag.UserSaveAccounts = saveAccountList;
-                    TempData["SuccessMessage"] = "El pago fue procesado exitosamente";
-                    return View();
-                }
-                else
-                {
-
-                    ViewBag.UserSaveAccounts = saveAccountList;
-                    TempData["ErrorMessage"] = result.Error;
-                    return View();
-                }
-            }
-            catch(Exception ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                return View();
-            }
-        }
+			TempData["SuccessMessage"] = "El pago fue procesado exitosamente.";
+			return View(vm);
+		}
     }
 }

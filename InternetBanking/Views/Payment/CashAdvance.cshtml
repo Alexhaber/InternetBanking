@@ -1,11 +1,8 @@
-﻿@using InternetBanking.Core.Domain.Entities
+﻿@using InternetBanking.Core.Application.ViewModels.Payment
+@model CashAdvanceViewModel
 
-@{
-    var userCards = ViewBag.UserCards as List<CreditCard>;
-    var userSaveAccounts = ViewBag.UserSaveAccounts as List<SavingAccount>;
-}
 <div class="row">
-    <divc class="col-md-6 offset-3">
+    <div class="col-md-6 offset-3">
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Cash Advance</h3>
@@ -15,43 +12,62 @@
                 {
                     <div class="alert alert-success">
                         @TempData["SuccessMessage"]
+                        <a asp-controller="Home" asp-action="Client" class="btn btn-warning">Home</a>
                     </div>
                 }
-                @if (TempData["ErrorMessage"] != null)
+                else
                 {
-                    <div class="alert alert-danger">
-                        @TempData["ErrorMessage"]
-                    </div>
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+                    <form asp-controller="Payment" asp-action="CashAdvance">
+                        <div class="mb-3">
+                            <label asp-for="SenderProductId" class="form-label">Tarjeta de crédito</label>
+                            <select asp-for="SenderProductId" class="form-select">
+                                <option value="">Select a credit card</option>
+                                @if(Model.CreditCards == null || Model.CreditCards.Count == 0)
+                                {
+                                    <option value="">No tienes tarjetas de credito</option>
+                                }
+                                else
+                                {
+                                    @foreach (var creditCard in Model.CreditCards)
+                                    {
+                                        <option value="@creditCard.Id">@creditCard.Id</option>
+                                    }    
+                                }
+                            </select>
+                            <span asp-validation-for="SenderProductId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="RecieverProductId" class="form-label">Cuenta Destino</label>
+                            <select asp-for="RecieverProductId" class="form-select">
+                                <option value="">Select an account</option>
+                                @foreach (var account in Model.Accounts)
+                                {
+                                    <option value="@account.Id">@account.Id</option>
+                                }
+                            </select>
+                            <span asp-validation-for="RecieverProductId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for=Monto class="form-label">Monto</label>
+                            <input asp-for="Monto" class="form-control" oninput="replaceDotWithComma(this)" />
+                            <span asp-validation-for="Monto" class="text-danger"></span>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Realizar</button>
+                        <a asp-controller="Home" asp-action="Client" class="btn btn-warning">Cancelar</a>
+                    </form>
                 }
-                <form asp-controller="Payment" asp-action="CashAdvance">
-                    <div class="mb-3">
-                        <label class="form-label" for="tarjeta">Tarjeta de crédito</label>
-                        <select class="form-select" id="tarjeta" name="CreditCardId">
-                            <option value="">Select a credit card</option>
-                            @foreach (var obj in userCards)
-                            {
-                                <option value="@obj.Id">@obj.Id</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="cuenta">Cuenta Destino</label>
-                        <select class="form-select" id="cuenta" name="SavingAccountId">
-                            <option value="">Select an account</option>
-                            @foreach (var obj in userSaveAccounts)
-                            {
-                                <option value="@obj.Id">@obj.Id</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="amount">Monto</label>
-                        <input class="form-control" type="number" id="amount" name="Amount" step="0.01" min="0" required />
-                    </div>
-                    <button class="btn btn-primary" type="submit">Realizar</button>
-                    <a asp-controller="Home" asp-action="Client" class="btn btn-warning">Cancelar</a>
-                </form>
             </div>
         </div>
-    </divc>
+    </div>
 </div>
+<script>
+function replaceDotWithComma(input) {
+    input.value = input.value.replace('.', ',');
+}
+</script>

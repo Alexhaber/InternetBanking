@@ -8,6 +8,7 @@ using InternetBanking.Core.Application.ViewModels.Loan;
 using InternetBanking.Core.Application.ViewModels.Payment;
 using InternetBanking.Core.Application.ViewModels.SavingAccount;
 using InternetBanking.Core.Domain.Entities;
+using System.ComponentModel;
 
 namespace InternetBanking.Core.Application.Services
 {
@@ -83,6 +84,28 @@ namespace InternetBanking.Core.Application.Services
             };
         }
 
+		public async Task<CashAdvanceViewModel> GetCashAdvanceViewModelAsync(string clientId)
+		{
+			var accounts = await _savingAccountRepository.GetAccountsByClientIdAsync(clientId);
+			var creditCards = await _creditCardRepository.GetCreditCardsByClientIdAsync(clientId);
+
+			return new CashAdvanceViewModel
+			{
+				Accounts = _mapper.Map<List<AccountViewModel>>(accounts),
+				CreditCards = _mapper.Map<List<CreditCardViewModel>>(creditCards)
+			};
+		}
+
+		public async Task<AccountToAccountViewModel> GetAccountToAccountViewModelAsync(string clientId)
+		{
+			var accounts = await _savingAccountRepository.GetAccountsByClientIdAsync(clientId);
+
+			return new AccountToAccountViewModel
+			{
+				Accounts = _mapper.Map<List<AccountViewModel>>(accounts)
+			};
+		}
+
 		public async Task<BeneficiaryPayViewModel> BeneficiaryPayValidationAsync(BeneficiaryPayViewModel vm)
 		{
 			var account = await _savingAccountRepository.GetByIdAsync(vm.AccountId);
@@ -111,9 +134,6 @@ namespace InternetBanking.Core.Application.Services
 			beneficiaryAccount.Monto += vm.Monto;
 			clientAccount.Monto -= vm.Monto;
 
-			await _savingAccountRepository.UpdateAsync(beneficiaryAccount, beneficiaryAccount.Id);
-			await _savingAccountRepository.UpdateAsync(clientAccount, clientAccount.Id);
-
 			var transaction = new Transaction
 			{
 				DestinationProductId = beneficiaryAccount.Id,
@@ -121,6 +141,8 @@ namespace InternetBanking.Core.Application.Services
 				Monto = vm.Monto
 			};
 
+			await _savingAccountRepository.UpdateAsync(beneficiaryAccount, beneficiaryAccount.Id);
+			await _savingAccountRepository.UpdateAsync(clientAccount, clientAccount.Id);
 			await _transactionRepository.AddAsync(transaction);
 
 			vm.IsSucceeded = true;
@@ -151,16 +173,15 @@ namespace InternetBanking.Core.Application.Services
 			loan.Paid += transactionAmount;
 			account.Monto -= transactionAmount;
 
-			await _loanRepository.UpdateAsync(loan, loan.Id);
-			await _savingAccountRepository.UpdateAsync(account, account.Id);
-
 			var transaction = new Transaction
 			{
 				DestinationProductId = loan.Id,
 				SourceProductId = account.Id,
-				Monto = vm.Monto
+				Monto = transactionAmount
 			};
 
+			await _loanRepository.UpdateAsync(loan, loan.Id);
+			await _savingAccountRepository.UpdateAsync(account, account.Id);
 			await _transactionRepository.AddAsync(transaction);
 
 			vm.IsSucceeded = true;
@@ -190,16 +211,15 @@ namespace InternetBanking.Core.Application.Services
 			creditCard.Monto += transactionAmount;
 			account.Monto -= transactionAmount;
 
-			await _creditCardRepository.UpdateAsync(creditCard, creditCard.Id);
-            await _savingAccountRepository.UpdateAsync(account, account.Id);
-
             var transaction = new Transaction
             {
                 DestinationProductId = creditCard.Id,
                 SourceProductId = account.Id,
-                Monto = vm.Monto
+                Monto = transactionAmount
             };
 
+			await _creditCardRepository.UpdateAsync(creditCard, creditCard.Id);
+			await _savingAccountRepository.UpdateAsync(account, account.Id);
 			await _transactionRepository.AddAsync(transaction);
 
 			vm.IsSucceeded = true;
@@ -241,9 +261,6 @@ namespace InternetBanking.Core.Application.Services
             destinyAccount.Monto += vm.Monto;
             originAccount.Monto -= vm.Monto;
 
-            await _savingAccountRepository.UpdateAsync(destinyAccount, destinyAccount.Id);
-			await _savingAccountRepository.UpdateAsync(originAccount, originAccount.Id);
-
             var transaction = new Transaction
             {
                 DestinationProductId = destinyAccount.Id,
@@ -251,18 +268,20 @@ namespace InternetBanking.Core.Application.Services
                 Monto = vm.Monto
             };
 
-            await _transactionRepository.AddAsync(transaction);
+			await _savingAccountRepository.UpdateAsync(destinyAccount, destinyAccount.Id);
+			await _savingAccountRepository.UpdateAsync(originAccount, originAccount.Id);
+			await _transactionRepository.AddAsync(transaction);
 
             vm.IsSucceeded = true;
 
             return vm;
 		}
 
-		public async Task<DepositResponse> MakeCashAdvance(CreditCard card, SavingAccount savingAccount, decimal deposit)
+		public async Task<DepositResponse> MakeCashAdvance(CashAdvanceViewModel vm)
 		{
 			var response = new DepositResponse();
 
-            var FromCard = await _creditCardRepository.GetByIdAsync(card.Id);
+            var FromCard = await _creditCardRepository.GetByIdAsync(vm.SenderProductId);
 
             if (FromCard == null)
             {
@@ -271,7 +290,7 @@ namespace InternetBanking.Core.Application.Services
                 return response;
             }
 
-            var ToAccount = await _savingAccountRepository.GetByIdAsync(savingAccount.Id);
+            var ToAccount = await _savingAccountRepository.GetByIdAsync(vm.RecieverProductId);
 
             if (ToAccount == null)
             {
@@ -280,8 +299,7 @@ namespace InternetBanking.Core.Application.Services
                 return response;
             }
 
-            //si el saldo de la tarjeta recivida es menor que el monto recibidio devuelve la respuesta como erronea
-            if (FromCard.Monto < deposit)
+            if (FromCard.Monto < vm.Monto)
             {
                 response.HasError = true;
                 response.Error = "El monto sobrepasa el limite de la tarjeta";
@@ -289,31 +307,28 @@ namespace InternetBanking.Core.Application.Services
                 return response;
             }
 
-            // se le suma el monto a la cuenta destino
-            ToAccount.Monto += deposit;
-            await _savingAccountRepository.UpdateAsync(ToAccount, ToAccount.Id);
-
-            // se le quita el monto del deposito + impuesto(6.25%) a la tarjeta
-            FromCard.Monto -= deposit * 1.0625M;
-            await _creditCardRepository.UpdateAsync(FromCard, FromCard.Id);
+            ToAccount.Monto += vm.Monto;
+            FromCard.Monto -= vm.Monto * 1.0625M;
 
             var transaction = new Transaction
             {
                 SourceProductId = FromCard.Id,
                 DestinationProductId = ToAccount.Id,
-                Monto = deposit
+                Monto = vm.Monto
             };
 
-            await _transactionRepository.AddAsync(transaction);
+			await _savingAccountRepository.UpdateAsync(ToAccount, ToAccount.Id);
+			await _creditCardRepository.UpdateAsync(FromCard, FromCard.Id);
+			await _transactionRepository.AddAsync(transaction);
 
             return response;
 		}
 
-		public async Task<DepositResponse> InterAccountTransaction(SavingAccount sender, SavingAccount receiver, decimal deposit)
+		public async Task<DepositResponse> InterAccountTransaction(AccountToAccountViewModel vm)
 		{
 			var response = new DepositResponse();
 
-            var FromAccount = await _savingAccountRepository.GetByIdAsync(sender.Id);
+            var FromAccount = await _savingAccountRepository.GetByIdAsync(vm.SenderProductId);
 
             if (FromAccount == null)
             {
@@ -322,7 +337,7 @@ namespace InternetBanking.Core.Application.Services
                 return response;
             }
 
-            var ToAccount = await _savingAccountRepository.GetByIdAsync(receiver.Id);
+            var ToAccount = await _savingAccountRepository.GetByIdAsync(vm.RecieverProductId);
 
             if (ToAccount == null)
             {
@@ -331,27 +346,26 @@ namespace InternetBanking.Core.Application.Services
                 return response;
             }
 
-            if (FromAccount.Monto < deposit)
+            if (FromAccount.Monto < vm.Monto)
             {
                 response.HasError = true;
                 response.Error = $"El monto enviado sobrepasar el saldo actual de la cuenta";
                 return response;
             }
 
-            FromAccount.Monto -= deposit;
-            ToAccount.Monto += deposit;
-
-            await _savingAccountRepository.UpdateAsync(ToAccount, ToAccount.Id);
-            await _savingAccountRepository.UpdateAsync(FromAccount, FromAccount.Id);
+            FromAccount.Monto -= vm.Monto;
+            ToAccount.Monto += vm.Monto;
 
             var transaction = new Transaction
             {
-                SourceProductId = sender.Id,
-                DestinationProductId = receiver.Id,
-                Monto = deposit
+                SourceProductId = vm.SenderProductId,
+                DestinationProductId = vm.RecieverProductId,
+                Monto = vm.Monto
             };
 
-            await _transactionRepository.AddAsync(transaction);
+			await _savingAccountRepository.UpdateAsync(ToAccount, ToAccount.Id);
+			await _savingAccountRepository.UpdateAsync(FromAccount, FromAccount.Id);
+			await _transactionRepository.AddAsync(transaction);
 
             return response;
 		}
