@@ -1,8 +1,6 @@
-﻿@using InternetBanking.Core.Domain.Entities
+﻿@using InternetBanking.Core.Application.ViewModels.Payment
+@model AccountToAccountViewModel
 
-@{
-    var userSaveAccounts = ViewBag.UserSaveAccounts as List<SavingAccount>;
-}
 <div class="row">
     <div class="col-md-6 offset-3">
         <div class="card">
@@ -14,43 +12,55 @@
                 {
                     <div class="alert alert-success">
                         @TempData["SuccessMessage"]
+                        <a asp-controller="Home" asp-action="Client" class="btn btn-warning">Home</a>
                     </div>
                 }
-                @if (TempData["ErrorMessage"] != null)
+                else
                 {
-                    <div class="alert alert-danger">
-                        @TempData["ErrorMessage"]
-                    </div>
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+                    <form asp-controller="Payment" asp-action="AccountToAccount">
+                        <div class="mb-3">
+                            <label asp-for=SenderProductId class="form-label">Cuenta origen</label>
+                            <select asp-for=SenderProductId class="form-select">
+                                <option value="">Select source account</option>
+                                @foreach (var accountOrigin in Model.Accounts)
+                                {
+                                    <option value="@accountOrigin.Id">@accountOrigin.Id</option>
+                                }
+                            </select>
+                            <span asp-validation-for="SenderProductId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="RecieverProductId" class="form-label">Cuenta destino</label>
+                            <select asp-for="RecieverProductId" class="form-select">
+                                <option value="">Select destiny account</option>
+                                @foreach (var accountDestiny in Model.Accounts)
+                                {
+                                    <option value="@accountDestiny.Id">@accountDestiny.Id</option>
+                                }
+                            </select>
+                            <span asp-validation-for="RecieverProductId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for=Monto class="form-label">Monto</label>
+                            <input asp-for="Monto" class="form-control" oninput="replaceDotWithComma(this)" />
+                            <span asp-validation-for="Monto" class="text-danger"></span>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Realizar</button>
+                        <a asp-controller="Home" asp-action="Client" class="btn btn-warning">Cancelar</a>
+                    </form>
                 }
-                <form asp-controller="Payment" asp-action="AccountToAccount">
-                    <div class="mb-3">
-                        <label class="form-label" for="tarjeta">Cuenta origen</label>
-                        <select class="form-select" id="tarjeta" name="FromAcoountId">
-                            <option value="">Select source account</option>
-                            @foreach (var obj in userSaveAccounts)
-                            {
-                                <option value="@obj.Id">@obj.Id</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="cuenta">Cuenta destino</label>
-                        <select class="form-select" id="cuenta" name="ToAccountId">
-                            <option value="">Select destiny account</option>
-                            @foreach (var obj in userSaveAccounts)
-                            {
-                                <option value="@obj.Id">@obj.Id</option>
-                            }
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="amount">Monto</label>
-                        <input class="form-control" type="number" id="amount" name="Amount" step="0.01" min="0" required />
-                    </div>
-                    <button class="btn btn-primary" type="submit">Realizar</button>
-                    <a asp-controller="Home" asp-action="Client" class="btn btn-warning">Cancelar</a>
-                </form>
             </div>
         </div>
     </div>
 </div>
+<script>
+function replaceDotWithComma(input) {
+    input.value = input.value.replace('.', ',');
+}
+</script>
