@@ -17,9 +17,10 @@ namespace InternetBanking.Core.Application.Services
         private readonly SerialGenerator _serialGenerator;
         private readonly ISavingAccountRepository _savingAccountRepository;
 
-        public SavingAccountService(SerialGenerator serialGenerator)
+        public SavingAccountService(SerialGenerator serialGenerator, ISavingAccountRepository savingAccountRepository)
         {
             _serialGenerator = serialGenerator;
+            _savingAccountRepository = savingAccountRepository;
         }
 
         public async Task AddSavingAccountAsync(AddSavingAccountViewModel model)
@@ -32,7 +33,10 @@ namespace InternetBanking.Core.Application.Services
                 {
                     throw new InvalidOperationException("Error generating unique serial ID.");
                 }
-
+                if (string.IsNullOrEmpty(model.ClientId))
+                {
+                    throw new InvalidOperationException("Client ID cannot be null or empty.");
+                }
 
                 List<SavingAccount> cuentasUser = await _savingAccountRepository.GetAccountsByClientIdAsync(model.ClientId);
                 if (cuentasUser == null)
@@ -73,12 +77,14 @@ namespace InternetBanking.Core.Application.Services
             }
             foreach (var account in cuentasUser)
             {
-                if (account.IsPrincipal)
+                if (account.IsPrincipal && amount > 0)
                 {
                     account.Monto += amount;
+                    await _savingAccountRepository.UpdateAsync(account,account.Id);
+                    break;
                 }
             }
-
+            
         }
 
     }

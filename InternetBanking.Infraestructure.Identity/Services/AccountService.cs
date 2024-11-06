@@ -6,6 +6,7 @@ using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.ViewModels.Account;
 using InternetBanking.Infraestructure.Identity.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace InternetBanking.Infraestructure.Identity.Services
 {
@@ -103,7 +104,19 @@ namespace InternetBanking.Infraestructure.Identity.Services
             {
                 HasError = false,
             };
+            var existingUsersWithSameCedula = await _userManager.Users
+                .Where(u => u.Cedula == request.Cedula)
+                .ToListAsync();
 
+            foreach(var user in existingUsersWithSameCedula)
+            {
+                if(user.Id != request.Id)
+                {
+                    response.HasError = true;
+                    response.Error = $"Cedula'{request.Cedula}' already exists.";
+                    return response;
+                }
+            }
             var userWithSameUserName = await _userManager.FindByNameAsync(request.FirstName);
             if (userWithSameUserName != null)
             {
@@ -153,17 +166,27 @@ namespace InternetBanking.Infraestructure.Identity.Services
         }
         public async Task<RegisterResponse> RegisterUserAsync(RegisterRequest request)
         {
-
             RegisterResponse response = new()
             {
                 HasError = false
             };
+            var existingUsersWithSameCedula = await _userManager.Users
+               .Where(u => u.Cedula == request.Cedula)
+               .ToListAsync();
 
-            var userWithSameUserName = await _userManager.FindByNameAsync(request.FirstName);
+            
+            if (existingUsersWithSameCedula.Count > 0)
+            {
+                response.HasError = true;
+                response.Error = $"Cedula'{request.Cedula}' already exists.";
+                return response;
+            }
+            
+            var userWithSameUserName = await _userManager.FindByNameAsync(request.UserName);
             if (userWithSameUserName != null)
             {
                 response.HasError = true;
-                response.Error = $"username '{request.FirstName}' is already taken.";
+                response.Error = $"El nombre de usuario '{request.UserName}' ya está en uso.";
                 return response;
             }
 
@@ -171,7 +194,7 @@ namespace InternetBanking.Infraestructure.Identity.Services
             if (userWithSameEmail != null)
             {
                 response.HasError = true;
-                response.Error = $"Email '{request.Email}' is already registered.";
+                response.Error = $"El correo electrónico '{request.Email}' ya está registrado.";
                 return response;
             }
 
@@ -182,31 +205,31 @@ namespace InternetBanking.Infraestructure.Identity.Services
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 EmailConfirmed = true,
-
-
+                Cedula = request.Cedula,
             };
+
             var result = await _userManager.CreateAsync(user, request.Password);
-            var createdUser = await _userManager.FindByEmailAsync(user.Email);
-            if (result.Succeeded)
+
+            if (!result.Succeeded)
             {
-                if (!request.Admin)
-                {
-                    await _userManager.AddToRoleAsync(user, Roles.Client.ToString());
-                }
-                else
-                {
-                    await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());
-                }
-                response.IdCreatedUser = createdUser.Id;
+                response.HasError = true;
+                response.Error = string.Join("; ", result.Errors.Select(e => e.Description));
                 return response;
+            }
+
+            if (!request.Admin)
+            {
+                await _userManager.AddToRoleAsync(user, Roles.Client.ToString());
             }
             else
             {
-                response.HasError = true;
-                response.Error = $"An error occurred trying to register the user.";
-                return response;
+                await _userManager.AddToRoleAsync(user, Roles.Admin.ToString());
             }
+
+            response.IdCreatedUser = user.Id;
+            return response;
         }
+
 
     }
 }

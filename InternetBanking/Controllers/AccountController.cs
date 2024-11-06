@@ -34,10 +34,11 @@ namespace InternetBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid && model.Amount>=0)
             {
                 return View(model);
             }
+
             RegisterRequest newClient = new()
             {
                 FirstName = model.FirstName,
@@ -49,22 +50,27 @@ namespace InternetBanking.Controllers
                 ConfirmPassword = model.ConfirmPassword,
                 UserName = model.UserName,
             };
+
+            var response = await _accountService.RegisterUserAsync(newClient);
+
+            if (response.HasError)
+            {
+                ModelState.AddModelError(string.Empty, response.Error);
+                return View(model);
+            }
+
+            
             AddSavingAccountViewModel savingAccount = new()
             {
                 Amount = model.Amount,
+                ClientId = response.IdCreatedUser
             };
 
-            if (savingAccount.Amount == null || savingAccount.ClientId == null)
-            {
-                return View(model);
-            }
-            var response = await _accountService.RegisterUserAsync(newClient);
-            var cliente = await _accountService.GetUserById(response.IdCreatedUser);
-            savingAccount.ClientId = cliente.Id;
             await _savingAccountService.AddSavingAccountAsync(savingAccount);
 
-            return RedirectToAction("Index", "Home"); //ruta provisional realmente se redirige a vista de Administrador(Index)
+            return RedirectToAction("Index", "Home");
         }
+
 
         public IActionResult Login()
         {

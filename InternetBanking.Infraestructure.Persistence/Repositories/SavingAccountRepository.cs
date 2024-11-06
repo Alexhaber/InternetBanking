@@ -10,10 +10,12 @@ namespace InternetBanking.Infraestructure.Persistence.Repositories
     {
         private readonly AppDbContext _context;
         private readonly ILogger<SavingAccountRepository> _logger;
-		public SavingAccountRepository(AppDbContext context) : base(context)
-		{
-			_context = context;
-		}
+
+        public SavingAccountRepository(AppDbContext context, ILogger<SavingAccountRepository> logger): base(context) 
+        {
+            _context = context;
+            _logger = logger;
+        }
 
         public async Task<List<SavingAccount>> GetAccountsByClientIdAsync(string clientId)
         {
