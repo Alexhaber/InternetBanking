@@ -12,18 +12,21 @@ namespace InternetBanking.Core.Application.Mappings
         public GeneralProfile()
         {
 			#region SavingAccount
-			CreateMap<SavingAccount, AccountViewModel>()
+			CreateMap<SavingAccount, SavingAccountViewModel>()
 				.ReverseMap();
 			#endregion
 
 			#region CreditCard
 			CreateMap<CreditCard, CreditCardViewModel>()
 				.ForMember(vm => vm.Debt, opt => opt.Ignore())
-				.ReverseMap();
-			#endregion
+				.ReverseMap()
+				;
+            
 
-			#region Loans
-			CreateMap<Loan, LoanViewModel>()
+            #endregion
+
+            #region Loans
+            CreateMap<Loan, LoanViewModel>()
 				.ForMember(vm => vm.Debt, opt => opt.Ignore())
 				.ReverseMap();
 			#endregion

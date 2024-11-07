@@ -44,7 +44,7 @@ namespace InternetBanking.Core.Application.Services
             var accounts = await _savingAccountRepository.GetAccountsByClientIdAsync(clientId);
             return new ExpresoPayViewModel
             {
-                Accounts = _mapper.Map<List<AccountViewModel>>(accounts)
+                Accounts = _mapper.Map<List<SavingAccountViewModel>>(accounts)
             };
         }
 
@@ -55,7 +55,7 @@ namespace InternetBanking.Core.Application.Services
 
             return new CreditCardPayViewModel
             {
-                Accounts = _mapper.Map<List<AccountViewModel>>(accounts),
+                Accounts = _mapper.Map<List<SavingAccountViewModel>>(accounts),
                 CreditCards = _mapper.Map<List<CreditCardViewModel>>(creditCards)
             };
         }
@@ -67,7 +67,7 @@ namespace InternetBanking.Core.Application.Services
 
             return new LoanPayViewModel
             {
-                Accounts = _mapper.Map<List<AccountViewModel>>(accounts),
+                Accounts = _mapper.Map<List<SavingAccountViewModel>>(accounts),
                 Loans = _mapper.Map<List<LoanViewModel>>(loans)
             };
         }
@@ -79,7 +79,7 @@ namespace InternetBanking.Core.Application.Services
 
             return new BeneficiaryPayViewModel
             {
-                Accounts = _mapper.Map<List<AccountViewModel>>(accounts),
+                Accounts = _mapper.Map<List<SavingAccountViewModel>>(accounts),
                 Beneficiaries = _mapper.Map<List<BeneficiaryViewModel>>(beneficiaries)
             };
         }
@@ -91,7 +91,7 @@ namespace InternetBanking.Core.Application.Services
 
             return new CashAdvanceViewModel
             {
-                Accounts = _mapper.Map<List<AccountViewModel>>(accounts),
+                Accounts = _mapper.Map<List<SavingAccountViewModel>>(accounts),
                 CreditCards = _mapper.Map<List<CreditCardViewModel>>(creditCards)
             };
         }
@@ -102,7 +102,7 @@ namespace InternetBanking.Core.Application.Services
 
             return new AccountToAccountViewModel
             {
-                Accounts = _mapper.Map<List<AccountViewModel>>(accounts)
+                Accounts = _mapper.Map<List<SavingAccountViewModel>>(accounts)
             };
         }
 

@@ -31,7 +31,7 @@ namespace InternetBanking.Core.Application.Services
 			HomeClientViewModel vm = new();
 
 			var accounts = await _savingAccountRepository.GetAccountsByClientIdAsync(clientId);
-			vm.SavingAccounts = _mapper.Map<List<AccountViewModel>>(accounts);
+			vm.SavingAccounts = _mapper.Map<List<SavingAccountViewModel>>(accounts);
 
 			var crediCards = await _creditCardRepository.GetCreditCardsByClientIdAsync(clientId);
 			vm.CreditCards = _mapper.Map<List<CreditCardViewModel>>(crediCards);

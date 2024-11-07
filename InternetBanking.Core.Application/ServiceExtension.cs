@@ -19,6 +19,10 @@ namespace InternetBanking.Core.Application
             services.AddTransient<IPaymentService, PaymentService>();
             services.AddTransient<ISavingAccountService, SavingAccountService>();
             services.AddSingleton<SerialGenerator, SerialGenerator>();
+            services.AddTransient<IAdminService, AdminService>();
+            services.AddTransient<ICreditCardService,CreditCardService> ();
+            services.AddTransient<ILoanService, LoanService>();
+            
             #endregion
         }
     }

@@ -13,7 +13,7 @@ namespace InternetBanking.Infraestructure.Persistence.Repositories
 		{
 			_context = context;
 		}
-
+		
 		public async Task<List<Loan>> GetLoansByClientIdAsync(string clientId)
 		{
 			return await _context.Loan.Where(l => l.UserId == clientId).ToListAsync();

@@ -14,6 +14,7 @@ namespace InternetBanking.Core.Application.Services
 {
     public class SavingAccountService : ISavingAccountService
     {
+
         private readonly SerialGenerator _serialGenerator;
         private readonly ISavingAccountRepository _savingAccountRepository;
 
@@ -39,21 +40,23 @@ namespace InternetBanking.Core.Application.Services
                 }
 
                 List<SavingAccount> cuentasUser = await _savingAccountRepository.GetAccountsByClientIdAsync(model.ClientId);
-                if (cuentasUser == null)
-                {
-                    throw new InvalidOperationException("Error retrieving accounts for the specified client ID.");
-                }
+                
 
 
-                var cantidadCuentas = cuentasUser.Count;
+                
                 SavingAccount cuenta = new()
                 {
                     Id = randomId,
                     UserId = model.ClientId,
-                    IsPrincipal = cantidadCuentas == 0,
+                    IsPrincipal = true,    
                     Monto = model.Amount
                 };
-
+                if (cuentasUser != null) 
+                {
+                    if (cuentasUser.Any()) {
+                        cuenta.IsPrincipal = false;
+                    }
+                }
 
                 await _savingAccountRepository.AddAsync(cuenta);
             }
@@ -68,6 +71,7 @@ namespace InternetBanking.Core.Application.Services
                 throw new Exception("An error occurred while adding the saving account.", ex);
             }
         }
+
         public async Task AdminIncreaseMainSavingAccountAmmount(decimal amount, string userId)
         {
             List<SavingAccount> cuentasUser = await _savingAccountRepository.GetAccountsByClientIdAsync(userId);

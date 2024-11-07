@@ -1,0 +1,141 @@
+﻿@model InternetBanking.Core.Application.ViewModels.Account.AccountViewModel
+
+@{
+    ViewData["Title"] = "Productos del Cliente";
+}
+
+<h2>Información del Cliente</h2>
+
+<div>
+    <p><strong>Nombre de Usuario:</strong> @Model.UserName</p>
+    <p><strong>Correo Electrónico:</strong> @Model.Email</p>
+</div>
+
+<div>
+    <h3>Cuentas de Ahorro</h3>
+    <a asp-action="AddSavingAccount" asp-route-clientId="@Model.Id" class="btn btn-success mb-2">Crear Cuenta de Ahorro</a>
+
+    @if (Model.UserSavingAccounts != null && Model.UserSavingAccounts.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Cuenta ID</th>
+                    <th>Monto</th>
+                    <th>Cuenta Principal</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var account in Model.UserSavingAccounts)
+                {
+                    <tr>
+                        <td>@account.Id</td>
+                        <td>@account.Monto</td>
+                        <td>@(account.IsPrincipal ? "Sí" : "No")</td>
+                        <td>
+                            @if (!account.IsPrincipal)
+                            {
+                                <form asp-action="DeleteSavingAccount" asp-route-id="@account.Id" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No hay cuentas de ahorro registradas.</p>
+    }
+</div>
+
+<div>
+    <h3>Préstamos</h3>
+    <a asp-action="AddLoan" asp-route-clientId="@Model.Id" class="btn btn-success mb-2">Crear Préstamo</a>
+
+    @if (Model.UserLoans != null && Model.UserLoans.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Préstamo ID</th>
+                    <th>Monto</th>
+                    <th>Pagado</th>
+                    <th>Deuda</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var loan in Model.UserLoans)
+                {
+                    <tr>
+                        <td>@loan.Id</td>
+                        <td>@loan.Monto</td>
+                        <td>@loan.Paid</td>
+                        <td>@loan.Debt</td>
+                        <td>
+                            <form asp-action="DeleteLoan" asp-route-id="@loan.Id" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No hay préstamos registrados.</p>
+    }
+</div>
+
+<div>
+    <h3>Tarjetas de Crédito</h3>
+    <a asp-action="AddCreditCard" asp-route-clientId="@Model.Id" class="btn btn-success mb-2">Crear Tarjeta de Crédito</a>
+
+    @if (Model.UserCreditCards != null && Model.UserCreditCards.Any())
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Tarjeta ID</th>
+                    <th>Límite</th>
+                    <th>Balance</th>
+                    <th>Deuda</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var card in Model.UserCreditCards)
+                {
+                    <tr>
+                        <td>@card.Id</td>
+                        <td>@card.Limit</td>
+                        <td>@card.Monto</td>
+                        <td>@card.Debt</td>
+                        <td>
+                            <form asp-action="DeleteCreditCard" asp-route-id="@card.Id" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No hay tarjetas de crédito registradas.</p>
+    }
+</div>
+
+<div>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Volver al Inicio</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

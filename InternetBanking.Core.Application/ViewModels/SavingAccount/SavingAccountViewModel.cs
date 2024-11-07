@@ -1,6 +1,6 @@
 ﻿namespace InternetBanking.Core.Application.ViewModels.SavingAccount
 {
-	public class AccountViewModel
+	public class SavingAccountViewModel
 	{
         public string Id { get; set; }
         public string UserId { get; set; }

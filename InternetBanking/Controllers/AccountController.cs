@@ -13,6 +13,7 @@ namespace InternetBanking.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly ISavingAccountService _savingAccountService;
+        
 
 
         public AccountController(IAccountService accountService, ISavingAccountService savingAccountService)
@@ -20,7 +21,7 @@ namespace InternetBanking.Controllers
             _accountService = accountService;
             _savingAccountService = savingAccountService;
         }
-
+        
         public async Task<IActionResult> Register()
         {
             if (User.IsInRole("Client"))
@@ -43,6 +44,8 @@ namespace InternetBanking.Controllers
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
+
+                
                 Email = model.Email,
                 Admin = model.Admin,
                 Cedula = model.Cedula,
@@ -226,5 +229,6 @@ namespace InternetBanking.Controllers
             return View();
         }
 
+        
     }
 }

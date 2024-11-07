@@ -23,6 +23,7 @@ namespace InternetBanking.Controllers
 			return View(await _homeService.GetProductsByClientIdAsync(clientId));
 		}
 
+        
         public IActionResult Index()
 		{
 			return View();
