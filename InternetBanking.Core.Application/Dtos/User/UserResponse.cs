@@ -9,5 +9,6 @@
         public string Cedula { get; set; }
         public string Email { get; set; }
         public bool IsEmailConfirmed { get; set; }
+        public IList<string> Roles { get; set; }
     }
 }

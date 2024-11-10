@@ -1,20 +1,16 @@
 ﻿using InternetBanking.Core.Application.Dtos.User;
-using InternetBanking.Core.Application.Enums;
 using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.ViewModels.Account;
 using InternetBanking.Core.Application.ViewModels.SavingAccount;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace InternetBanking.Controllers
 {
-    public class AccountController : Controller
+	public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
         private readonly ISavingAccountService _savingAccountService;
-        
-
 
         public AccountController(IAccountService accountService, ISavingAccountService savingAccountService)
         {
@@ -35,7 +31,7 @@ namespace InternetBanking.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            if (!ModelState.IsValid && model.Amount>=0)
+            if (!ModelState.IsValid && model.Amount >= 0)
             {
                 return View(model);
             }
@@ -44,8 +40,6 @@ namespace InternetBanking.Controllers
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-
-                
                 Email = model.Email,
                 Admin = model.Admin,
                 Cedula = model.Cedula,
@@ -62,14 +56,16 @@ namespace InternetBanking.Controllers
                 return View(model);
             }
 
-            
-            AddSavingAccountViewModel savingAccount = new()
+            if(!model.Admin)
             {
-                Amount = model.Amount,
-                ClientId = response.IdCreatedUser
-            };
+                AddSavingAccountViewModel savingAccount = new()
+                {
+                    Amount = model.Amount,
+                    ClientId = response.IdCreatedUser
+                };
 
-            await _savingAccountService.AddSavingAccountAsync(savingAccount);
+                await _savingAccountService.AddSavingAccountAsync(savingAccount);
+            }
 
             return RedirectToAction("AdminIndex", "Home");
         }

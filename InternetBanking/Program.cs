@@ -1,6 +1,8 @@
 using InternetBanking.Core.Application;
 using InternetBanking.Infraestructure.Identity;
 using InternetBanking.Infraestructure.Persistence;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +12,17 @@ builder.Services.AddApplicationLayer();
 builder.Services.AddIdentityInfraestructureLayer(builder.Configuration);
 builder.Services.AddPersistenceInfraestructureLayer(builder.Configuration);
 
+var defaultCulture = new CultureInfo("en-US");
+var localizationOptions = new RequestLocalizationOptions
+{
+	DefaultRequestCulture = new RequestCulture(defaultCulture),
+	SupportedCultures = new List<CultureInfo> { defaultCulture },
+	SupportedUICultures = new List<CultureInfo> { defaultCulture }
+};
+
 var app = builder.Build();
+
+app.UseRequestLocalization(localizationOptions);
 
 var userId = await app.Services.SeedIdentityDbAsync();
 

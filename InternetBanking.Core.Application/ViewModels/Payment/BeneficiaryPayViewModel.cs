@@ -15,9 +15,8 @@ namespace InternetBanking.Core.Application.ViewModels.Payment
         [DataType(DataType.Text)]
         public string AccountId { get; set; }
 
-        [Required(ErrorMessage = "Monto es requerido")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "El monto debe ser mayor a 0")]
-        [DataType(DataType.Currency)]
+        [Required(ErrorMessage = "Monto is required")]
+        [Range(0.0001, double.MaxValue, ErrorMessage = "Monto must be greater than 0")]
         public decimal Monto { get; set; }
         public bool HasError { get; set; }
         public string? Error { get; set; }
