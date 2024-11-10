@@ -10,6 +10,8 @@ namespace InternetBanking.Core.Application.Interfaces.Services
         Task<UserResponse> GetUserById(string id);
         Task<RegisterResponse> RegisterUserAsync(RegisterRequest request);
         Task<ICollection<string>> GetUserRolesByUserId(string id);
+        Task<List<UserResponse>> GetAllUsers();
+        Task ChangeUserState(UserResponse user);
         Task<EditUserResponse> EditUserAsync(EditUserRequest request);
 
     }

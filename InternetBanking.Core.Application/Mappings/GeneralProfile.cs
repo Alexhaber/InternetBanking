@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using InternetBanking.Core.Application.Dtos.User;
 using InternetBanking.Core.Application.ViewModels.Beneficiary;
 using InternetBanking.Core.Application.ViewModels.CreditCard;
 using InternetBanking.Core.Application.ViewModels.Loan;
@@ -11,6 +12,8 @@ namespace InternetBanking.Core.Application.Mappings
 	{
         public GeneralProfile()
         {
+			
+				
 			#region SavingAccount
 			CreateMap<SavingAccount, SavingAccountViewModel>()
 				.ReverseMap();

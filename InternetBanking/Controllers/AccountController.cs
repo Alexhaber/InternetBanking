@@ -26,7 +26,7 @@ namespace InternetBanking.Controllers
         {
             if (User.IsInRole("Client"))
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("AdminIndex", "Home");
             }
             return View(new RegisterViewModel());
         }
@@ -81,7 +81,7 @@ namespace InternetBanking.Controllers
             {
                 if (User.IsInRole("Admin"))
                 {
-                    return RedirectToAction("Index", "Home"); //vista de admin
+                    return RedirectToAction("AdminIndex", "Home"); //vista de admin
                 }
 
                 return RedirectToAction("Client", "Home"); //vista de cliente
@@ -97,7 +97,7 @@ namespace InternetBanking.Controllers
             {
                 if (User.IsInRole("Admin"))
                 {
-                    return RedirectToAction("Index", "Home"); //vista de admin
+                    return RedirectToAction("AdminIndex", "Home"); //vista de admin
                 }
 
                 return RedirectToAction("Client", "Home"); //vista de cliente
@@ -117,7 +117,7 @@ namespace InternetBanking.Controllers
 
             if (response.Roles.Contains("Admin"))
             {
-                return RedirectToAction("Index", "Home"); //vista de admin
+                return RedirectToAction("AdminIndex", "Home"); //vista de admin
             }
 
             return RedirectToAction("Client", "Home"); //vista de cliente

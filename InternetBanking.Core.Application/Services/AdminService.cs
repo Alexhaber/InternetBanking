@@ -24,6 +24,7 @@ namespace InternetBanking.Core.Application.Services
         private readonly ICreditCardRepository _creditCardRepository;
         private readonly ICreditCardService _creditCardService;
         private readonly IAccountService _accountService;
+        
         private readonly IMapper _mapper;
 
         public AdminService(ISavingAccountRepository savingAccountRepository, ISavingAccountService savingAccountService, ILoanRepository loanRepository, ILoanService loanService, ICreditCardRepository creditCardRepository, ICreditCardService creditCardService, IAccountService accountService, IMapper mapper)
@@ -38,6 +39,19 @@ namespace InternetBanking.Core.Application.Services
             _mapper = mapper;
         }
 
+        public async Task ChangeUserState(string accountId)
+        {
+            try
+            {
+                var user = await _accountService.GetUserById(accountId);
+                await _accountService.ChangeUserState(user);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            
+        }
         public async Task<AccountViewModel> GetAccountView(string accountId)
         {
             try

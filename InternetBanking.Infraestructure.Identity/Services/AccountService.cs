@@ -4,9 +4,12 @@ using InternetBanking.Core.Application.Dtos.User;
 using InternetBanking.Core.Application.Enums;
 using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.ViewModels.Account;
+using InternetBanking.Infraestructure.Identity.Contexts;
 using InternetBanking.Infraestructure.Identity.Entities;
+using InternetBanking.Infraestructure.Identity.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace InternetBanking.Infraestructure.Identity.Services
 {
@@ -14,12 +17,17 @@ namespace InternetBanking.Infraestructure.Identity.Services
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly IdentityContext _context;
+        private readonly IUserRepository _userRepository;
 
-        public AccountService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public AccountService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IdentityContext context, IUserRepository userRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context;
+            _userRepository = userRepository;
         }
+
 
         public async Task<LoginViewModel> AuthenticateAsync(LoginViewModel vm)
         {
@@ -61,7 +69,36 @@ namespace InternetBanking.Infraestructure.Identity.Services
         {
             await _signInManager.SignOutAsync();
         }
-
+        public async Task<List<UserResponse>> GetAllUsers()
+        {
+            var accounts = await _userRepository.GetAllAsync();
+            List<UserResponse> users = new List<UserResponse>();
+            foreach(var account in accounts)
+            {
+                UserResponse user = new UserResponse
+                {
+                    Id = account.Id,
+                    UserName = account.UserName,
+                    Email = account.Email,
+                    IsEmailConfirmed = account.EmailConfirmed,
+                };
+                users.Add(user);
+            }
+            return users;
+            
+        }
+        public async Task ChangeUserState(UserResponse user)
+        {
+            var existingUser = await _userRepository.GetByIdAsync(user.Id);
+            var roles = await _userManager.IsInRoleAsync(existingUser,Roles.Admin.ToString());
+            if (!roles)
+            {
+                existingUser.EmailConfirmed = !existingUser.EmailConfirmed;
+                await _userRepository.UpdateAsync(existingUser, existingUser.Id);
+            }
+            
+            
+        }
         public async Task<UserResponse> GetUserById(string id)
         {
             // Asegúrate de que _userManager esté correctamente inicializado.

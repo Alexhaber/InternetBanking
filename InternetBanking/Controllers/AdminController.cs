@@ -23,7 +23,7 @@ namespace InternetBanking.Controllers
         {
             if (User.IsInRole("Client"))
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("AdminIndex", "Home");
             }
 
             try
@@ -41,6 +41,11 @@ namespace InternetBanking.Controllers
             }
 
             return RedirectToAction("Index", "Home");
+        }
+        public async Task<IActionResult> ChangeUserStatus(string id)
+        {
+            await _adminService.ChangeUserState(id);
+            return RedirectToAction("AdminIndex", "Home");
         }
 
         

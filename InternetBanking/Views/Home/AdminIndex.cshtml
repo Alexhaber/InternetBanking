@@ -1,0 +1,61 @@
+﻿@model List<InternetBanking.Core.Application.Dtos.User.UserResponse>
+
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+}
+
+<h2>Gestión de Usuarios</h2>
+
+<a href="@Url.Action("Register", "Account")" class="btn btn-primary mb-3">Crear Usuario</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre de Usuario</th>
+            <th>Correo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>@user.Email</td>
+                <td>@(user.IsEmailConfirmed ? "Activo" : "Inactivo")</td>
+                <td>
+                    <!-- Botón de Editar -->
+                    <a href="@Url.Action("EditAccount", "Account", new { id = user.Id })" class="btn btn-secondary">Editar</a>
+
+                    <!-- Botón de Activar/Inactivar -->
+                    @if (user.IsEmailConfirmed)
+                    {
+                        <button onclick="confirmAction('@user.Id', 'inactivar')" class="btn btn-warning">Inactivar</button>
+                    }
+                    else
+                    {
+                        <button onclick="confirmAction('@user.Id', 'activar')" class="btn btn-success">Activar</button>
+                    }
+
+                    <!-- Botón de Eliminar -->
+                    <button onclick="confirmDelete('@user.Id')" class="btn btn-danger">Eliminar</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    function confirmAction(userId, action) {
+        if (confirm(`¿Está seguro de que desea ${action} este usuario?`)) {
+            window.location.href = `/Admin/ChangeUserStatus/${userId}`;
+        }
+    }
+
+    function confirmDelete(userId) {
+        if (confirm("¿Está seguro de que desea eliminar este usuario?")) {
+            window.location.href = `/Admin/DeleteUser/${userId}`;
+        }
+    }
+</script>

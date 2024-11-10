@@ -13,6 +13,7 @@ namespace InternetBanking.Core.Application.Interfaces.Services
         Task DeleteCreditCardAsync(string id);
         Task DeleteLoanAsync(string id);
         Task DeleteSavingAccountAsync(string id);
+        Task ChangeUserState(string accountId);
         Task<AccountViewModel> GetAccountView(string accountId);
     }
 }
