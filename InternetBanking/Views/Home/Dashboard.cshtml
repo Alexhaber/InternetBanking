@@ -1,0 +1,55 @@
+﻿@model InternetBanking.Core.Application.ViewModels.Home.DashBoardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2>Dashboard - Resumen del Sistema</h2>
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- Total de Transacciones y Transacciones del Día -->
+        <div class="col-md-6">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-header">Transacciones Totales</div>
+                <div class="card-body">
+                    <h5 class="card-title">Transacciones Totales: @Model.TransactionsCount</h5>
+                    <p class="card-text">Transacciones de Hoy: @Model.TodayPayments</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total de Pagos y Pagos del Día -->
+        <div class="col-md-6">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-header">Pagos</div>
+                <div class="card-body">
+                    <h5 class="card-title">Total de Pagos: @Model.AllPayments</h5>
+                    <p class="card-text">Pagos de Hoy: @Model.TodayPayments</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Clientes Activos e Inactivos -->
+        <div class="col-md-6">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">Clientes</div>
+                <div class="card-body">
+                    <h5 class="card-title">Clientes Activos: @Model.ActiveClients</h5>
+                    <p class="card-text">Clientes Inactivos: @Model.InactiveClientsCount</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Productos Asignados a los Clientes -->
+        <div class="col-md-6">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-header">Productos Asignados</div>
+                <div class="card-body">
+                    <h5 class="card-title">Total de Productos Asignados: @Model.Products</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

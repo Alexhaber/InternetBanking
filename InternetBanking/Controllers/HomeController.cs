@@ -38,6 +38,12 @@ namespace InternetBanking.Controllers
 			var usuarios = await _accountService.GetAllUsers();            
 			return View(usuarios);
         }
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Dashboard()
+		{
+			var dashboard =await _homeService.GetDashBoardAsync();
+			return View(dashboard);
+		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()

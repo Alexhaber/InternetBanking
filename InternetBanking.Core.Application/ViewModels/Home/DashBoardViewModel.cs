@@ -9,12 +9,10 @@ namespace InternetBanking.Core.Application.ViewModels.Home
     public class DashBoardViewModel
     {
         public int TransactionsCount { get; set; }
-        public int TransactionsToday { get; set; }
-        public int TotalPaymentsCount { get; set; }
-        public int PaymentsTodayCount { get; set; }
-        public int ActiveClientsCount { get; set; }
+        public int TodayPayments { get; set; }
+        public int AllPayments { get; set; }
+        public int ActiveClients {  get; set; }
         public int InactiveClientsCount { get; set; }
-        public int TotalProductsAssigned { get; set; }
+        public int Products {  get; set; }
     }
-
 }
