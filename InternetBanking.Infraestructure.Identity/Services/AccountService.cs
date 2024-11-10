@@ -247,7 +247,7 @@ namespace InternetBanking.Infraestructure.Identity.Services
                 Email = request.Email,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
-                EmailConfirmed = true,
+                EmailConfirmed = false,
                 Cedula = request.Cedula,
             };
 

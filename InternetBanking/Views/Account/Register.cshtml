@@ -57,11 +57,16 @@
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
 
+    <div class="form-group">
+        <label asp-for="Admin">Admin</label>
+        <input asp-for="Admin" type="checkbox" class="form-check-input" />
+        
+    </div>
     
-
+    
     <div class="form-group">
         <label asp-for="Amount">Monto Inicial de la Cuenta de Ahorros</label>
-        <input asp-for="Amount" class="form-control" />
+        <input asp-for="Amount" class="form-control" step="0.01" />
         <span asp-validation-for="Amount" class="text-danger"></span>
     </div>
 
@@ -75,3 +80,4 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+

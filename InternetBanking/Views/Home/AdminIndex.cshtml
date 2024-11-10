@@ -22,16 +22,17 @@
         @foreach (var user in Model)
         {
             <tr>
-                <td>@user.UserName</td>
-                <td>@user.Email</td>
-                <td>@(user.IsEmailConfirmed ? "Activo" : "Inactivo")</td>
-                <td>
-                    <!-- Botón de Editar -->
-                    <a href="@Url.Action("EditAccount", "Account", new { id = user.Id })" class="btn btn-secondary">Editar</a>
+                @if (user.Id != currentUserId){
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@(user.IsEmailConfirmed ? "Activo" : "Inactivo")</td>
+                    <td>
+                        <!-- Botón de Editar -->
+                        <a href="@Url.Action("EditAccount", "Account", new { id = user.Id })" class="btn btn-secondary">Editar</a>
 
-                    <!-- Botones de Activar/Inactivar solo si no es el admin en sesión -->
-                    @if (user.Id != currentUserId)
-                    {
+                        <!-- Botones de Activar/Inactivar solo si no es el admin en sesión -->
+                        
+                        
                         <a href="@Url.Action("Productos", "Admin", new { id = user.Id })" class="btn btn-success">Productos</a>
                         @if (user.IsEmailConfirmed)
                         {
@@ -41,10 +42,11 @@
                         {
                             <button onclick="confirmAction('@user.Id', 'activar')" class="btn btn-success">Activar</button>
                         }
-                    }
+                        
 
                     
-                </td>
+                    </td>
+                }
             </tr>
         }
     </tbody>
@@ -62,4 +64,6 @@
             window.location.href = `/Admin/DeleteUser/${userId}`;
         }
     }
+    
 </script>
+

@@ -40,12 +40,12 @@ namespace InternetBanking.Controllers
                 ModelState.AddModelError(string.Empty, $"Error: {ex.Message}");
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("AdminIndex", "Home");
         }
         public async Task<IActionResult> ChangeUserStatus(string id)
         {
             await _adminService.ChangeUserState(id);
-            return RedirectToAction("AdminIndex", "Home");
+            return RedirectToAction("Dashboard", "Home");
         }
 
         

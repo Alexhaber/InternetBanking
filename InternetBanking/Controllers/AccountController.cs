@@ -71,7 +71,7 @@ namespace InternetBanking.Controllers
 
             await _savingAccountService.AddSavingAccountAsync(savingAccount);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("AdminIndex", "Home");
         }
 
 
@@ -97,7 +97,7 @@ namespace InternetBanking.Controllers
             {
                 if (User.IsInRole("Admin"))
                 {
-                    return RedirectToAction("AdminIndex", "Home"); //vista de admin
+                    return RedirectToAction("Dashboard", "Home"); //vista de admin
                 }
 
                 return RedirectToAction("Client", "Home"); //vista de cliente
@@ -117,7 +117,7 @@ namespace InternetBanking.Controllers
 
             if (response.Roles.Contains("Admin"))
             {
-                return RedirectToAction("AdminIndex", "Home"); //vista de admin
+                return RedirectToAction("Dashboard", "Home"); //vista de admin
             }
 
             return RedirectToAction("Client", "Home"); //vista de cliente
@@ -199,7 +199,7 @@ namespace InternetBanking.Controllers
                 }
 
                 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("AdminIndex", "Home");
             }
             catch (InvalidOperationException ex)
             {
