@@ -8,69 +8,70 @@ using InternetBanking.Core.Application.ViewModels.Loan;
 using InternetBanking.Core.Application.ViewModels.Payment;
 using InternetBanking.Core.Application.ViewModels.SavingAccount;
 using InternetBanking.Core.Domain.Entities;
+using InternetBanking.Core.Domain.Enums;
 using System.ComponentModel;
 
 namespace InternetBanking.Core.Application.Services
 {
-	public class PaymentService : IPaymentService
-	{
-		private readonly ITransactionRepository _transactionRepository;
+    public class PaymentService : IPaymentService
+    {
+        private readonly ITransactionRepository _transactionRepository;
         private readonly ICreditCardRepository _creditCardRepository;
         private readonly ISavingAccountRepository _savingAccountRepository;
         private readonly ILoanRepository _loanRepository;
         private readonly IBeneficiaryService _beneficiaryService;
         private readonly IAccountService _accountService;
-		private readonly IMapper _mapper;
+        private readonly IMapper _mapper;
 
-		public PaymentService(ITransactionRepository transactionRepository, 
-                                ICreditCardRepository creditCardRepository, 
+        public PaymentService(ITransactionRepository transactionRepository,
+                                ICreditCardRepository creditCardRepository,
                                 ISavingAccountRepository savingAccountRepository,
                                 ILoanRepository loanRepository,
                                 IBeneficiaryService beneficiaryService,
                                 IAccountService accountService,
                                 IMapper mapper)
-		{
-			_transactionRepository = transactionRepository;
+        {
+            _transactionRepository = transactionRepository;
             _creditCardRepository = creditCardRepository;
             _savingAccountRepository = savingAccountRepository;
             _loanRepository = loanRepository;
             _beneficiaryService = beneficiaryService;
             _accountService = accountService;
-			_mapper = mapper;
-		}
+            _mapper = mapper;
+        }
 
         public async Task<ExpresoPayViewModel> GetExpresoPayViewModelAsync(string clientId)
         {
             var accounts = await _savingAccountRepository.GetAccountsByClientIdAsync(clientId);
             return new ExpresoPayViewModel
             {
-                Accounts = _mapper.Map<List<AccountViewModel>>(accounts)
+                Accounts = _mapper.Map<List<SavingAccountViewModel>>(accounts)
             };
         }
 
-		public async Task<CreditCardPayViewModel> GetCreditCardPayViewModelAsync(string clientId)
-		{
-			var accounts = await _savingAccountRepository.GetAccountsByClientIdAsync(clientId);
+        public async Task<CreditCardPayViewModel> GetCreditCardPayViewModelAsync(string clientId)
+        {
+            var accounts = await _savingAccountRepository.GetAccountsByClientIdAsync(clientId);
             var creditCards = await _creditCardRepository.GetCreditCardsByClientIdAsync(clientId);
 
-			return new CreditCardPayViewModel
-			{
-				Accounts = _mapper.Map<List<AccountViewModel>>(accounts),
+            return new CreditCardPayViewModel
+            {
+                Accounts = _mapper.Map<List<SavingAccountViewModel>>(accounts),
                 CreditCards = _mapper.Map<List<CreditCardViewModel>>(creditCards)
-			};
-		}
+            };
+        }
 
-		public async Task<LoanPayViewModel> GetLoanPayViewModelAsync(string clientId)
-		{
-			var accounts = await _savingAccountRepository.GetAccountsByClientIdAsync(clientId);
-			var loans = await _loanRepository.GetLoansByClientIdAsync(clientId);
+        public async Task<LoanPayViewModel> GetLoanPayViewModelAsync(string clientId)
+        {
+            var accounts = await _savingAccountRepository.GetAccountsByClientIdAsync(clientId);
+            var loans = await _loanRepository.GetLoansByClientIdAsync(clientId);
 
-			return new LoanPayViewModel
-			{
-				Accounts = _mapper.Map<List<AccountViewModel>>(accounts),
-				Loans = _mapper.Map<List<LoanViewModel>>(loans)
-			};
-		}
+            return new LoanPayViewModel
+            {
+                Accounts = _mapper.Map<List<SavingAccountViewModel>>(accounts),
+                Loans = _mapper.Map<List<LoanViewModel>>(loans)
+            };
+        }
 
         public async Task<BeneficiaryPayViewModel> GetBeneficiaryPayViewModelAsync(string clientId)
         {
@@ -79,137 +80,137 @@ namespace InternetBanking.Core.Application.Services
 
             return new BeneficiaryPayViewModel
             {
-                Accounts = _mapper.Map<List<AccountViewModel>>(accounts),
+                Accounts = _mapper.Map<List<SavingAccountViewModel>>(accounts),
                 Beneficiaries = _mapper.Map<List<BeneficiaryViewModel>>(beneficiaries)
             };
         }
 
-		public async Task<CashAdvanceViewModel> GetCashAdvanceViewModelAsync(string clientId)
-		{
-			var accounts = await _savingAccountRepository.GetAccountsByClientIdAsync(clientId);
-			var creditCards = await _creditCardRepository.GetCreditCardsByClientIdAsync(clientId);
+        public async Task<CashAdvanceViewModel> GetCashAdvanceViewModelAsync(string clientId)
+        {
+            var accounts = await _savingAccountRepository.GetAccountsByClientIdAsync(clientId);
+            var creditCards = await _creditCardRepository.GetCreditCardsByClientIdAsync(clientId);
 
-			return new CashAdvanceViewModel
-			{
-				Accounts = _mapper.Map<List<AccountViewModel>>(accounts),
-				CreditCards = _mapper.Map<List<CreditCardViewModel>>(creditCards)
-			};
-		}
+            return new CashAdvanceViewModel
+            {
+                Accounts = _mapper.Map<List<SavingAccountViewModel>>(accounts),
+                CreditCards = _mapper.Map<List<CreditCardViewModel>>(creditCards)
+            };
+        }
 
-		public async Task<AccountToAccountViewModel> GetAccountToAccountViewModelAsync(string clientId)
-		{
-			var accounts = await _savingAccountRepository.GetAccountsByClientIdAsync(clientId);
+        public async Task<AccountToAccountViewModel> GetAccountToAccountViewModelAsync(string clientId)
+        {
+            var accounts = await _savingAccountRepository.GetAccountsByClientIdAsync(clientId);
 
-			return new AccountToAccountViewModel
-			{
-				Accounts = _mapper.Map<List<AccountViewModel>>(accounts)
-			};
-		}
+            return new AccountToAccountViewModel
+            {
+                Accounts = _mapper.Map<List<SavingAccountViewModel>>(accounts)
+            };
+        }
 
-		public async Task<BeneficiaryPayViewModel> BeneficiaryPayValidationAsync(BeneficiaryPayViewModel vm)
-		{
-			var account = await _savingAccountRepository.GetByIdAsync(vm.AccountId);
+        public async Task<BeneficiaryPayViewModel> BeneficiaryPayValidationAsync(BeneficiaryPayViewModel vm)
+        {
+            var account = await _savingAccountRepository.GetByIdAsync(vm.AccountId);
 
-			if (account.Monto < vm.Monto)
-			{
-				vm.HasError = true;
-				vm.Error = "Tu cuenta no tiene saldo suficiente para realizar el pago";
-				return vm;
-			}
+            if (account.Monto < vm.Monto)
+            {
+                vm.HasError = true;
+                vm.Error = "Tu cuenta no tiene saldo suficiente para realizar el pago";
+                return vm;
+            }
 
             var beneficiaryAccount = await _savingAccountRepository.GetByIdAsync(vm.BeneficiaryAccountId);
 
-			var ownerBeneficiaryAccount = await _accountService.GetUserById(beneficiaryAccount.UserId);
+            var ownerBeneficiaryAccount = await _accountService.GetUserById(beneficiaryAccount.UserId);
 
-			vm.BeneficiaryName = $"{ownerBeneficiaryAccount.FirstName} {ownerBeneficiaryAccount.LastName}";
+            vm.BeneficiaryName = $"{ownerBeneficiaryAccount.FirstName} {ownerBeneficiaryAccount.LastName}";
 
-			return vm;
-		}
+            return vm;
+        }
 
-		public async Task<BeneficiaryPayViewModel> BeneficiaryPayAsync(BeneficiaryPayViewModel vm)
-		{
-			var beneficiaryAccount = await _savingAccountRepository.GetByIdAsync(vm.BeneficiaryAccountId);
-			var clientAccount = await _savingAccountRepository.GetByIdAsync(vm.AccountId);
+        public async Task<BeneficiaryPayViewModel> BeneficiaryPayAsync(BeneficiaryPayViewModel vm)
+        {
+            var beneficiaryAccount = await _savingAccountRepository.GetByIdAsync(vm.BeneficiaryAccountId);
+            var clientAccount = await _savingAccountRepository.GetByIdAsync(vm.AccountId);
 
-			beneficiaryAccount.Monto += vm.Monto;
-			clientAccount.Monto -= vm.Monto;
+            beneficiaryAccount.Monto += vm.Monto;
+            clientAccount.Monto -= vm.Monto;
 
-			var transaction = new Transaction
-			{
-				DestinationProductId = beneficiaryAccount.Id,
-				SourceProductId = clientAccount.Id,
-				Monto = vm.Monto
-			};
+            var transaction = new Transaction
+            {
+                DestinationProductId = beneficiaryAccount.Id,
+                SourceProductId = clientAccount.Id,
+                Monto = vm.Monto
+            };
 
-			await _savingAccountRepository.UpdateAsync(beneficiaryAccount, beneficiaryAccount.Id);
-			await _savingAccountRepository.UpdateAsync(clientAccount, clientAccount.Id);
-			await _transactionRepository.AddAsync(transaction);
+            await _savingAccountRepository.UpdateAsync(beneficiaryAccount, beneficiaryAccount.Id);
+            await _savingAccountRepository.UpdateAsync(clientAccount, clientAccount.Id);
+            await _transactionRepository.AddAsync(transaction);
 
-			vm.IsSucceeded = true;
+            vm.IsSucceeded = true;
 
-			return vm;
-		}
+            return vm;
+        }
 
-		public async Task<LoanPayViewModel> LoanPayAsync(LoanPayViewModel vm)
-		{
-			var loan = await _loanRepository.GetByIdAsync(vm.LoanId);
-			var account = await _savingAccountRepository.GetByIdAsync(vm.AccountId);
+        public async Task<LoanPayViewModel> LoanPayAsync(LoanPayViewModel vm)
+        {
+            var loan = await _loanRepository.GetByIdAsync(vm.LoanId);
+            var account = await _savingAccountRepository.GetByIdAsync(vm.AccountId);
 
-			if (account.Monto < vm.Monto)
-			{
-				vm.HasError = true;
-				vm.Error = "Tu cuenta no tiene saldo suficiente para realizar el pago";
-				return vm;
-			}
+            if (account.Monto < vm.Monto)
+            {
+                vm.HasError = true;
+                vm.Error = "Tu cuenta no tiene saldo suficiente para realizar el pago";
+                return vm;
+            }
 
-			decimal debt = loan.Monto - loan.Paid;
-			decimal transactionAmount = vm.Monto;
+            decimal debt = loan.Monto - loan.Paid;
+            decimal transactionAmount = vm.Monto;
 
-			if (debt < transactionAmount)
-			{
-				transactionAmount = debt;
-			}
+            if (debt < transactionAmount)
+            {
+                transactionAmount = debt;
+            }
 
-			loan.Paid += transactionAmount;
-			account.Monto -= transactionAmount;
+            loan.Paid += transactionAmount;
+            account.Monto -= transactionAmount;
 
-			var transaction = new Transaction
-			{
-				DestinationProductId = loan.Id,
-				SourceProductId = account.Id,
-				Monto = transactionAmount
-			};
+            var transaction = new Transaction
+            {
+                DestinationProductId = loan.Id,
+                SourceProductId = account.Id,
+                Monto = transactionAmount
+            };
 
-			await _loanRepository.UpdateAsync(loan, loan.Id);
-			await _savingAccountRepository.UpdateAsync(account, account.Id);
-			await _transactionRepository.AddAsync(transaction);
+            await _loanRepository.UpdateAsync(loan, loan.Id);
+            await _savingAccountRepository.UpdateAsync(account, account.Id);
+            await _transactionRepository.AddAsync(transaction);
 
-			vm.IsSucceeded = true;
-			return vm;
-		}
+            vm.IsSucceeded = true;
+            return vm;
+        }
 
-		public async Task<CreditCardPayViewModel> CreditCardPayAsync(CreditCardPayViewModel vm)
+        public async Task<CreditCardPayViewModel> CreditCardPayAsync(CreditCardPayViewModel vm)
         {
             var creditCard = await _creditCardRepository.GetByIdAsync(vm.CreditCardId);
             var account = await _savingAccountRepository.GetByIdAsync(vm.AccountId);
 
-            if(account.Monto < vm.Monto)
+            if (account.Monto < vm.Monto)
             {
-				vm.HasError = true;
-				vm.Error = "Tu cuenta no tiene saldo suficiente para realizar el pago";
-				return vm;
-			}
+                vm.HasError = true;
+                vm.Error = "Tu cuenta no tiene saldo suficiente para realizar el pago";
+                return vm;
+            }
 
             decimal debt = creditCard.Limit - creditCard.Monto;
-			decimal transactionAmount = vm.Monto;
+            decimal transactionAmount = vm.Monto;
 
-			if (debt < transactionAmount)
-			{
-				transactionAmount = debt;
-			}
+            if (debt < transactionAmount)
+            {
+                transactionAmount = debt;
+            }
 
-			creditCard.Monto += transactionAmount;
-			account.Monto -= transactionAmount;
+            creditCard.Monto += transactionAmount;
+            account.Monto -= transactionAmount;
 
             var transaction = new Transaction
             {
@@ -218,19 +219,19 @@ namespace InternetBanking.Core.Application.Services
                 Monto = transactionAmount
             };
 
-			await _creditCardRepository.UpdateAsync(creditCard, creditCard.Id);
-			await _savingAccountRepository.UpdateAsync(account, account.Id);
-			await _transactionRepository.AddAsync(transaction);
+            await _creditCardRepository.UpdateAsync(creditCard, creditCard.Id);
+            await _savingAccountRepository.UpdateAsync(account, account.Id);
+            await _transactionRepository.AddAsync(transaction);
 
-			vm.IsSucceeded = true;
+            vm.IsSucceeded = true;
             return vm;
-		}
+        }
 
-		public async Task<ExpresoPayViewModel> ExpresoPayValidationAsync(ExpresoPayViewModel vm)
+        public async Task<ExpresoPayViewModel> ExpresoPayValidationAsync(ExpresoPayViewModel vm)
         {
             var destinyAccount = await _savingAccountRepository.GetByIdAsync(vm.DestinyAccountId);
 
-            if(destinyAccount == null)
+            if (destinyAccount == null)
             {
                 vm.HasError = true;
                 vm.Error = $"No existe cuenta con Id: {vm.DestinyAccountId}";
@@ -239,7 +240,7 @@ namespace InternetBanking.Core.Application.Services
 
             var originAccount = await _savingAccountRepository.GetByIdAsync(vm.OriginAccountId);
 
-            if(originAccount.Monto < vm.Monto)
+            if (originAccount.Monto < vm.Monto)
             {
                 vm.HasError = true;
                 vm.Error = "Tu cuenta no tiene saldo suficiente para realizar el pago";
@@ -253,10 +254,10 @@ namespace InternetBanking.Core.Application.Services
             return vm;
         }
 
-		public async Task<ExpresoPayViewModel> ExpresoPayAsync(ExpresoPayViewModel vm)
+        public async Task<ExpresoPayViewModel> ExpresoPayAsync(ExpresoPayViewModel vm)
         {
-			var destinyAccount = await _savingAccountRepository.GetByIdAsync(vm.DestinyAccountId);
-			var originAccount = await _savingAccountRepository.GetByIdAsync(vm.OriginAccountId);
+            var destinyAccount = await _savingAccountRepository.GetByIdAsync(vm.DestinyAccountId);
+            var originAccount = await _savingAccountRepository.GetByIdAsync(vm.OriginAccountId);
 
             destinyAccount.Monto += vm.Monto;
             originAccount.Monto -= vm.Monto;
@@ -268,18 +269,18 @@ namespace InternetBanking.Core.Application.Services
                 Monto = vm.Monto
             };
 
-			await _savingAccountRepository.UpdateAsync(destinyAccount, destinyAccount.Id);
-			await _savingAccountRepository.UpdateAsync(originAccount, originAccount.Id);
-			await _transactionRepository.AddAsync(transaction);
+            await _savingAccountRepository.UpdateAsync(destinyAccount, destinyAccount.Id);
+            await _savingAccountRepository.UpdateAsync(originAccount, originAccount.Id);
+            await _transactionRepository.AddAsync(transaction);
 
             vm.IsSucceeded = true;
 
             return vm;
-		}
+        }
 
-		public async Task<DepositResponse> MakeCashAdvance(CashAdvanceViewModel vm)
-		{
-			var response = new DepositResponse();
+        public async Task<DepositResponse> MakeCashAdvance(CashAdvanceViewModel vm)
+        {
+            var response = new DepositResponse();
 
             var FromCard = await _creditCardRepository.GetByIdAsync(vm.SenderProductId);
 
@@ -314,19 +315,20 @@ namespace InternetBanking.Core.Application.Services
             {
                 SourceProductId = FromCard.Id,
                 DestinationProductId = ToAccount.Id,
+                Tipo = PaymentTypes.NormalTransaction,
                 Monto = vm.Monto
             };
 
-			await _savingAccountRepository.UpdateAsync(ToAccount, ToAccount.Id);
-			await _creditCardRepository.UpdateAsync(FromCard, FromCard.Id);
-			await _transactionRepository.AddAsync(transaction);
+            await _savingAccountRepository.UpdateAsync(ToAccount, ToAccount.Id);
+            await _creditCardRepository.UpdateAsync(FromCard, FromCard.Id);
+            await _transactionRepository.AddAsync(transaction);
 
             return response;
-		}
+        }
 
-		public async Task<DepositResponse> InterAccountTransaction(AccountToAccountViewModel vm)
-		{
-			var response = new DepositResponse();
+        public async Task<DepositResponse> InterAccountTransaction(AccountToAccountViewModel vm)
+        {
+            var response = new DepositResponse();
 
             var FromAccount = await _savingAccountRepository.GetByIdAsync(vm.SenderProductId);
 
@@ -360,14 +362,15 @@ namespace InternetBanking.Core.Application.Services
             {
                 SourceProductId = vm.SenderProductId,
                 DestinationProductId = vm.RecieverProductId,
+                Tipo = PaymentTypes.NormalTransaction,
                 Monto = vm.Monto
             };
 
-			await _savingAccountRepository.UpdateAsync(ToAccount, ToAccount.Id);
-			await _savingAccountRepository.UpdateAsync(FromAccount, FromAccount.Id);
-			await _transactionRepository.AddAsync(transaction);
+            await _savingAccountRepository.UpdateAsync(ToAccount, ToAccount.Id);
+            await _savingAccountRepository.UpdateAsync(FromAccount, FromAccount.Id);
+            await _transactionRepository.AddAsync(transaction);
 
             return response;
-		}
-	}
+        }
+    }
 }

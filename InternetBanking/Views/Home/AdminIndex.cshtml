@@ -1,0 +1,69 @@
+﻿@model List<InternetBanking.Core.Application.Dtos.User.UserResponse>
+
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+    var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+}
+
+<h2>Gestión de Usuarios</h2>
+
+<a href="@Url.Action("Register", "Account")" class="btn btn-primary mb-3">Crear Usuario</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre de Usuario</th>
+            <th>Correo</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                @if (user.Id != currentUserId){
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@(user.IsEmailConfirmed ? "Activo" : "Inactivo")</td>
+                    <td>
+                        <!-- Botón de Editar -->
+                        <a href="@Url.Action("EditAccount", "Account", new { id = user.Id })" class="btn btn-secondary">Editar</a>
+
+                        <!-- Botones de Activar/Inactivar solo si no es el admin en sesión -->
+                        
+                        
+                        <a href="@Url.Action("Productos", "Admin", new { id = user.Id })" class="btn btn-success">Productos</a>
+                        @if (user.IsEmailConfirmed)
+                        {
+                            <button onclick="confirmAction('@user.Id', 'inactivar')" class="btn btn-warning">Inactivar</button>
+                        }
+                        else
+                        {
+                            <button onclick="confirmAction('@user.Id', 'activar')" class="btn btn-success">Activar</button>
+                        }
+                        
+
+                    
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    function confirmAction(userId, action) {
+        if (confirm(`¿Está seguro de que desea ${action} este usuario?`)) {
+            window.location.href = `/Admin/ChangeUserStatus/${userId}`;
+        }
+    }
+
+    function confirmDelete(userId) {
+        if (confirm("¿Está seguro de que desea eliminar este usuario?")) {
+            window.location.href = `/Admin/DeleteUser/${userId}`;
+        }
+    }
+    
+</script>
+
