@@ -24,7 +24,6 @@ namespace InternetBanking.Core.Application.Services
         private readonly ICreditCardRepository _creditCardRepository;
         private readonly ICreditCardService _creditCardService;
         private readonly IAccountService _accountService;
-        
         private readonly IMapper _mapper;
 
         public AdminService(ISavingAccountRepository savingAccountRepository, ISavingAccountService savingAccountService, ILoanRepository loanRepository, ILoanService loanService, ICreditCardRepository creditCardRepository, ICreditCardService creditCardService, IAccountService accountService, IMapper mapper)

@@ -7,7 +7,7 @@
 <h2>Editar Cuenta</h2>
 
 <!-- Muestra mensajes de error generales -->
-@if (!ViewData.ModelState.IsValid || ViewData.ModelState.Count > 0)
+@if (!ViewData.ModelState.IsValid)
 {
     <div class="alert alert-danger">
         @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
@@ -59,17 +59,25 @@
         <input asp-for="ConfirmPassword" type="password" class="form-control" />
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>
+    @if(!Model.IsAdmin)
+    {
+        <div class="form-group">
+            <label asp-for="Monto" class="control-label"></label>
+            <input asp-for="Monto" type="number" step="0.01" class="form-control" />
+            <span asp-validation-for="Monto" class="text-danger"></span>
+        </div>
+    }
+    else
+    {
+        <!-- Campo Monto escondido para admin con valor predeterminado de 0 -->
+        <input asp-for="Monto" type="hidden" value="0" />
+    }
 
-    <div class="form-group">
-        <label asp-for="Monto" class="control-label"></label>
-        <input asp-for="Monto" type="number" step="0.01" class="form-control" />
-        <span asp-validation-for="Monto" class="text-danger"></span>
-    </div>
 
     
 
     <button type="submit" class="btn btn-primary mt-3">Guardar Cambios</button>
-    <a asp-action="Index" class="btn btn-secondary mt-3">Cancelar</a>
+    <a href="@Url.Action("AdminIndex", "Home")" class="btn btn-secondary mt-3">Cancelar</a>
 </form>
 
 @section Scripts {
