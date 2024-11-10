@@ -1,5 +1,4 @@
 ﻿using InternetBanking.Core.Application.Interfaces.Services;
-using InternetBanking.Core.Application.ViewModels.Account;
 using InternetBanking.Core.Application.ViewModels.CreditCard;
 using InternetBanking.Core.Application.ViewModels.Loan;
 using InternetBanking.Core.Application.ViewModels.SavingAccount;
@@ -8,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InternetBanking.Controllers
 {
-    [Authorize(Roles = "Admin")]
+	[Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
 
@@ -21,11 +20,6 @@ namespace InternetBanking.Controllers
 
         public async Task<IActionResult> Productos(string id)
         {
-            if (User.IsInRole("Client"))
-            {
-                return RedirectToAction("AdminIndex", "Home");
-            }
-
             try
             {
                 var profile = await _adminService.GetAccountView(id);
@@ -42,13 +36,13 @@ namespace InternetBanking.Controllers
 
             return RedirectToAction("AdminIndex", "Home");
         }
+
         public async Task<IActionResult> ChangeUserStatus(string id)
         {
             await _adminService.ChangeUserState(id);
-            return RedirectToAction("Dashboard", "Home");
+            return RedirectToAction("AdminIndex", "Home");
         }
 
-        
         public IActionResult AddSavingAccount(string clientId)
         {
             return View(new AddSavingAccountViewModel { ClientId = clientId });
@@ -119,11 +113,11 @@ namespace InternetBanking.Controllers
 
         
         [HttpPost]
-        public async Task<IActionResult> DeleteSavingAccount(string id)
+        public async Task<IActionResult> DeleteSavingAccount(string id, string clientId)
         {
             try
             {
-                await _adminService.DeleteSavingAccountAsync(id);
+                await _adminService.DeleteSavingAccountAsync(id, clientId);
             }
             catch (Exception ex)
             {

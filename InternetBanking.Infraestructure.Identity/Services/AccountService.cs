@@ -81,7 +81,8 @@ namespace InternetBanking.Infraestructure.Identity.Services
                     UserName = account.UserName,
                     Email = account.Email,
                     IsEmailConfirmed = account.EmailConfirmed,
-                };
+                    Roles = await _userManager.GetRolesAsync(account)
+                }; 
                 users.Add(user);
             }
             return users;
@@ -90,14 +91,10 @@ namespace InternetBanking.Infraestructure.Identity.Services
         public async Task ChangeUserState(UserResponse user)
         {
             var existingUser = await _userRepository.GetByIdAsync(user.Id);
-            var roles = await _userManager.IsInRoleAsync(existingUser,Roles.Admin.ToString());
-            if (!roles)
-            {
-                existingUser.EmailConfirmed = !existingUser.EmailConfirmed;
-                await _userRepository.UpdateAsync(existingUser, existingUser.Id);
-            }
-            
-            
+
+            existingUser.EmailConfirmed = !existingUser.EmailConfirmed;
+
+            await _userRepository.UpdateAsync(existingUser, existingUser.Id);
         }
         public async Task<UserResponse> GetUserById(string id)
         {
@@ -119,11 +116,11 @@ namespace InternetBanking.Infraestructure.Identity.Services
             return new UserResponse
             {
                 Id = user.Id,
-                UserName = user.UserName ?? "Unknown", // Usa valores predeterminados si es necesario
-                FirstName = user.FirstName ?? string.Empty,
-                LastName = user.LastName ?? string.Empty,
-                Email = user.Email ?? string.Empty,
-                // Otras propiedades...
+                UserName = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Cedula = user.Cedula
             };
         }
 

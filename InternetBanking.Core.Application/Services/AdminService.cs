@@ -1,17 +1,10 @@
 ﻿using AutoMapper;
-using InternetBanking.Core.Application.Dtos.User;
 using InternetBanking.Core.Application.Interfaces.Repositories;
 using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.ViewModels.Account;
 using InternetBanking.Core.Application.ViewModels.CreditCard;
 using InternetBanking.Core.Application.ViewModels.Loan;
 using InternetBanking.Core.Application.ViewModels.SavingAccount;
-using InternetBanking.Core.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InternetBanking.Core.Application.Services
 {
@@ -128,38 +121,45 @@ namespace InternetBanking.Core.Application.Services
             }
         }
 
-        public async Task DeleteSavingAccountAsync(string id)
+        public async Task DeleteSavingAccountAsync(string id, string clientId)
         {
             var savingAccount = await _savingAccountRepository.GetByIdAsync(id);
+
             if (savingAccount == null)
             {
                 throw new Exception("Account was not found.");
             }
+
             if (savingAccount.IsPrincipal)
             {
                 throw new Exception("You can't delete your main saving account.");
             }
+
+            if(savingAccount.Monto > 0)
+            {
+                var clientAccounts = await _savingAccountRepository.GetAccountsByClientIdAsync(clientId);
+                var principalAccount = clientAccounts.FirstOrDefault(a => a.IsPrincipal);
+
+                principalAccount.Monto += savingAccount.Monto;
+
+                await _savingAccountRepository.UpdateAsync(principalAccount, principalAccount.Id);
+            }
+
             await _savingAccountRepository.DeleteAsync(savingAccount);
 
         }
+
         public async Task AddCreditCardAsync(AddCreditCardViewModel creditCard)
         {
             await _creditCardService.AddCreditCardAsync(creditCard);
         }
+
         public async Task DeleteCreditCardAsync(string id)
         {
             var creditCard = await _creditCardRepository.GetByIdAsync(id);
-            CreditCardViewModel vm = new CreditCardViewModel
-            {
-                Id = id,
-                Limit = creditCard.Limit,
-                Monto = creditCard.Monto,
-                UserId = creditCard.UserId,
-
-
-            };
-            await _creditCardService.DeleteCreditCardAsync(vm);
+            await _creditCardRepository.DeleteAsync(creditCard);
         }
+
         public async Task AddLoanASync(AddLoanViewModel vm)
         {
             var loan = await _loanService.AddLoanAsync(vm);
@@ -174,17 +174,11 @@ namespace InternetBanking.Core.Application.Services
                 }            
             }
         }
+
         public async Task DeleteLoanAsync(string id)
         {
-            var existingLoan = await _loanRepository.GetByIdAsync(id);
-            LoanViewModel model = new LoanViewModel
-            {
-                Id = id,
-                Monto = existingLoan.Monto,
-                UserId = existingLoan.UserId,
-                Paid = existingLoan.Paid,
-            };
-            await _loanService.DeleteLoanAsync(model);
+            var loan = await _loanRepository.GetByIdAsync(id);
+            await _loanRepository.DeleteAsync(loan);
         }
     }
 }

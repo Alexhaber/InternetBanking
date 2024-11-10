@@ -30,11 +30,7 @@ namespace InternetBanking.Controllers
             {
                 var viewModel = await _paymentService.GetExpresoPayViewModelAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 vm.Accounts = viewModel.Accounts;
-                
-
-
                 return View(vm);
-                
             }
 
             var response = await _paymentService.ExpresoPayValidationAsync(vm);

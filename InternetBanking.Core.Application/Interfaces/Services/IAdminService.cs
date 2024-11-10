@@ -12,7 +12,7 @@ namespace InternetBanking.Core.Application.Interfaces.Services
         Task AddSavingAccount(AddSavingAccountViewModel sAVm);
         Task DeleteCreditCardAsync(string id);
         Task DeleteLoanAsync(string id);
-        Task DeleteSavingAccountAsync(string id);
+        Task DeleteSavingAccountAsync(string id, string clientId);
         Task ChangeUserState(string accountId);
         Task<AccountViewModel> GetAccountView(string accountId);
     }

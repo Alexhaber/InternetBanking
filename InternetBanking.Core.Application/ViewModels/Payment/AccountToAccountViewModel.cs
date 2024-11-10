@@ -14,8 +14,7 @@ namespace InternetBanking.Core.Application.ViewModels.Payment
         public string RecieverProductId { get; set; }
 
         [Required(ErrorMessage = "Monto is required")]
-        [Range(0.01, double.MaxValue, ErrorMessage = "Monto must be greater than 0")]
-        [DataType(DataType.Currency)]
+        [Range(0.0001, double.MaxValue, ErrorMessage = "Monto must be greater than 0")]
         public decimal Monto { get; set; }
         public List<SavingAccountViewModel>? Accounts { get; set; }
     }
