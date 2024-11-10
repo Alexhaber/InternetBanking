@@ -14,6 +14,7 @@
         <tr>
             <th>Nombre de Usuario</th>
             <th>Correo</th>
+            <th>Rol</th>
             <th>Estado</th>
             <th>Acciones</th>
         </tr>
@@ -25,15 +26,13 @@
                 @if (user.Id != currentUserId){
                     <td>@user.UserName</td>
                     <td>@user.Email</td>
+                    <td>@user.Roles.FirstOrDefault()</td>
                     <td>@(user.IsEmailConfirmed ? "Activo" : "Inactivo")</td>
                     <td>
                         <!-- Botón de Editar -->
                         <a href="@Url.Action("EditAccount", "Account", new { id = user.Id })" class="btn btn-secondary">Editar</a>
 
                         <!-- Botones de Activar/Inactivar solo si no es el admin en sesión -->
-                        
-                        
-                        <a href="@Url.Action("Productos", "Admin", new { id = user.Id })" class="btn btn-success">Productos</a>
                         @if (user.IsEmailConfirmed)
                         {
                             <button onclick="confirmAction('@user.Id', 'inactivar')" class="btn btn-warning">Inactivar</button>
@@ -42,9 +41,11 @@
                         {
                             <button onclick="confirmAction('@user.Id', 'activar')" class="btn btn-success">Activar</button>
                         }
-                        
 
-                    
+                        @if (user.Roles.FirstOrDefault() == "Client")
+                        {
+                            <a href="@Url.Action("Productos", "Admin", new { id = user.Id })" class="btn btn-success">Productos</a>
+                        }
                     </td>
                 }
             </tr>

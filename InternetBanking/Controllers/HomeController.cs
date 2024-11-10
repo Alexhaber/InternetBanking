@@ -26,18 +26,13 @@ namespace InternetBanking.Controllers
 			return View(await _homeService.GetProductsByClientIdAsync(clientId));
 		}
 
-        
-        public IActionResult Index()
-		{
-			return View();
-		}
-
 		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> AdminIndex()
 		{
 			var usuarios = await _accountService.GetAllUsers();            
 			return View(usuarios);
         }
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Dashboard()
 		{

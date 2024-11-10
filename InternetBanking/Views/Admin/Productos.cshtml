@@ -36,7 +36,7 @@
                         <td>
                             @if (!account.IsPrincipal)
                             {
-                                <form asp-action="DeleteSavingAccount" asp-route-id="@account.Id" method="post" style="display:inline;">
+                                <form asp-action="DeleteSavingAccount" asp-route-id="@account.Id" asp-route-clientId="@Model.Id" method="post" style="display:inline;">
                                     <button type="submit" class="btn btn-danger">Eliminar</button>
                                 </form>
                             }
@@ -78,7 +78,8 @@
                         <td>@loan.Debt</td>
                         <td>
                             <form asp-action="DeleteLoan" asp-route-id="@loan.Id" method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-danger">Eliminar</button>
+
+                                <button type="submit" class="btn btn-danger" @(loan.Debt > 0 ? "disabled" : "")>Eliminar</button>
                             </form>
                         </td>
                     </tr>
@@ -118,7 +119,7 @@
                         <td>@card.Debt</td>
                         <td>
                             <form asp-action="DeleteCreditCard" asp-route-id="@card.Id" method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                <button type="submit" class="btn btn-danger" @(card.Debt > 0 ? "disabled" : "")>Eliminar</button>
                             </form>
                         </td>
                     </tr>
@@ -133,7 +134,7 @@
 </div>
 
 <div>
-    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Volver al Inicio</a>
+    <a asp-action="AdminIndex" asp-controller="Home" class="btn btn-secondary">Volver al Inicio</a>
 </div>
 
 @section Scripts {

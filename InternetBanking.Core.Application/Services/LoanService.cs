@@ -64,12 +64,9 @@ namespace InternetBanking.Core.Application.Services
             }
 
 
-            Loan loan = new Loan(model.Monto)
-            {
-                Paid = model.Paid,
-                UserId = model.UserId,
-                Monto = model.Monto
-            };
+            Loan loan = new Loan(model.Monto);
+            loan.Paid = model.Paid;
+            loan.UserId = model.UserId;
 
             await _loanRepository.DeleteAsync(loan);
         }
