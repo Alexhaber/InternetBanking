@@ -32,6 +32,7 @@
                     <!-- Botones de Activar/Inactivar solo si no es el admin en sesión -->
                     @if (user.Id != currentUserId)
                     {
+                        <a href="@Url.Action("Productos", "Admin", new { id = user.Id })" class="btn btn-success">Productos</a>
                         @if (user.IsEmailConfirmed)
                         {
                             <button onclick="confirmAction('@user.Id', 'inactivar')" class="btn btn-warning">Inactivar</button>

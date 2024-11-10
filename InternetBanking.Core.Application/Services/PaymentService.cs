@@ -8,6 +8,7 @@ using InternetBanking.Core.Application.ViewModels.Loan;
 using InternetBanking.Core.Application.ViewModels.Payment;
 using InternetBanking.Core.Application.ViewModels.SavingAccount;
 using InternetBanking.Core.Domain.Entities;
+using InternetBanking.Core.Domain.Enums;
 using System.ComponentModel;
 
 namespace InternetBanking.Core.Application.Services
@@ -314,6 +315,7 @@ namespace InternetBanking.Core.Application.Services
             {
                 SourceProductId = FromCard.Id,
                 DestinationProductId = ToAccount.Id,
+                Tipo = PaymentTypes.NormalTransaction,
                 Monto = vm.Monto
             };
 
@@ -360,6 +362,7 @@ namespace InternetBanking.Core.Application.Services
             {
                 SourceProductId = vm.SenderProductId,
                 DestinationProductId = vm.RecieverProductId,
+                Tipo = PaymentTypes.NormalTransaction,
                 Monto = vm.Monto
             };
 

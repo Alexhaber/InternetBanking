@@ -134,7 +134,13 @@ namespace InternetBanking.Infraestructure.Identity.Services
             var roles = await _userManager.GetRolesAsync(user);
             return roles;
         }
-
+        public async Task<int> GetActiveUsersCountByRole(Roles rol)
+        {
+            var users = await _userManager.GetUsersInRoleAsync(rol.ToString());
+            users = users.Where(u => u.EmailConfirmed == true).ToList();
+            return users.Count;
+        }
+        
         public async Task<EditUserResponse> EditUserAsync(EditUserRequest request)
         {
             EditUserResponse response = new()

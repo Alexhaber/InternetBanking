@@ -44,6 +44,7 @@ namespace InternetBanking.Core.Application.Mappings
 				.ForMember(vm => vm.Error, opt => opt.Ignore())
 				.ReverseMap();
 			#endregion
+
 		}
 	}
 }

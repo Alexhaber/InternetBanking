@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using InternetBanking.Core.Application.Enums;
 using InternetBanking.Core.Application.Interfaces.Repositories;
 using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.ViewModels.CreditCard;
 using InternetBanking.Core.Application.ViewModels.Home;
 using InternetBanking.Core.Application.ViewModels.Loan;
 using InternetBanking.Core.Application.ViewModels.SavingAccount;
+using InternetBanking.Core.Domain.Enums;
 
 namespace InternetBanking.Core.Application.Services
 {
@@ -44,26 +46,31 @@ namespace InternetBanking.Core.Application.Services
 
             var allProducts = allLoans.Count + allCreditCards.Count + allSavingAccounts.Count;
 
+            var activeClients = await _accountService.GetActiveUsersCountByRole(Roles.Client);
             
-            var activeClients = accounts.Where(account => account.IsEmailConfirmed).ToList();
+            
             var inactiveClients = accounts.Where(account => !account.IsEmailConfirmed).ToList();
 
+            var allPayments = allTransactions.Where(t => t.Tipo == PaymentTypes.PaymentTransaction).ToList();
             
             var today = DateTime.Today;
             var todayTransactions = allTransactions.Where(t => t.Made == today).ToList();
-            
+            var todayPayments = allPayments.Where(p=> p.Made == today).ToList();
             
 
             DashBoardViewModel dashBoardViewModel = new DashBoardViewModel
             {
-                
-                TransactionsCount = allTransactions.Count,
-                TodayPayments = todayTransactions.Count,
+                AllProducts = allProducts,
+                AllTransactions = allTransactions.Count,
+                AllPayments = allPayments.Count,
 
-                ActiveClients = activeClients.Count,
+                TodayPayments = todayPayments.Count,
+                TodayTransactions = todayTransactions.Count,
+                
+                ActiveClients = activeClients,
                 InactiveClientsCount = inactiveClients.Count,
+                
                
-                Products = allProducts
             };
 
             return dashBoardViewModel;
