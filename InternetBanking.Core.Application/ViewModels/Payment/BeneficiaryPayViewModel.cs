@@ -23,7 +23,7 @@ namespace InternetBanking.Core.Application.ViewModels.Payment
         public string? Error { get; set; }
         public bool IsSucceeded { get; set; }
         public List<BeneficiaryViewModel>? Beneficiaries { get; set; }
-        public List<AccountViewModel>? Accounts { get; set; }
+        public List<SavingAccountViewModel>? Accounts { get; set; }
 		public string? BeneficiaryName { get; set; }
 	}
 }

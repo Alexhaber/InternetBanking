@@ -1,0 +1,24 @@
+﻿@model InternetBanking.Core.Application.ViewModels.Loan.AddLoanViewModel
+
+@{
+    ViewData["Title"] = "Agregar Préstamo";
+}
+
+<h2>Agregar Préstamo</h2>
+
+<form asp-action="AddLoan" method="post">
+    <div class="form-group">
+        <label asp-for="Monto" class="control-label">Monto del Préstamo</label>
+        <input asp-for="Monto" class="form-control" />
+        <span asp-validation-for="Monto" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" asp-for="UserId" />
+
+    <button type="submit" class="btn btn-primary">Agregar</button>
+    <a asp-action="Productos" asp-route-id="@Model.UserId" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

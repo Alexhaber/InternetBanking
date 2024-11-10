@@ -4,7 +4,8 @@ namespace InternetBanking.Core.Domain.Entities
 {
 	public class Loan : AuditableBaseEntity
 	{
-        public decimal Monto { get; private set; }
+        
+        public decimal Monto { get;  set; }
         public decimal Paid { get; set; }
 
         public Loan(decimal monto)

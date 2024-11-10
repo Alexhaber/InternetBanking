@@ -14,6 +14,7 @@ namespace InternetBanking.Controllers
 		public PaymentController(IPaymentService paymentService)
 		{
 			_paymentService = paymentService;
+
 		}
 
         public async Task<IActionResult> ExpresoPayment()
@@ -29,7 +30,11 @@ namespace InternetBanking.Controllers
             {
                 var viewModel = await _paymentService.GetExpresoPayViewModelAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 vm.Accounts = viewModel.Accounts;
-				return View(vm);
+                
+
+
+                return View(vm);
+                
             }
 
             var response = await _paymentService.ExpresoPayValidationAsync(vm);
@@ -76,6 +81,7 @@ namespace InternetBanking.Controllers
 				var viewModel = await _paymentService.GetCreditCardPayViewModelAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
 				response.Accounts = viewModel.Accounts;
 				response.CreditCards = viewModel.CreditCards;
+
 			}
 
 			return View(response);

@@ -20,6 +20,6 @@ namespace InternetBanking.Core.Application.ViewModels.Payment
         public decimal Monto { get; set; }
         public List<CreditCardViewModel>? CreditCards { get; set; }
 
-        public List<AccountViewModel>? Accounts { get; set; }
+        public List<SavingAccountViewModel>? Accounts { get; set; }
     }
 }

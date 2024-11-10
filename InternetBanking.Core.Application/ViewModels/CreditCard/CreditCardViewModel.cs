@@ -4,7 +4,7 @@
 	{
 		public string Id { get; set; }
 		public string UserId { get; set; }
-		public decimal Limit { get; private set; }
+		public decimal Limit { get;set; }
 		public decimal Monto { get; set; }
 		public decimal Debt => Limit - Monto;
     }

@@ -18,7 +18,7 @@ namespace InternetBanking.Core.Application.ViewModels.Payment
 		[Range(0.01, double.MaxValue, ErrorMessage = "El monto debe ser mayor a 0")]
 		[DataType(DataType.Currency)]
         public decimal Monto { get; set; }
-        public List<AccountViewModel>? Accounts { get; set; }
+        public List<SavingAccountViewModel>? Accounts { get; set; }
         public bool HasError { get; set; }
         public string? Error { get; set; }
         public bool IsSucceeded { get; set; }

@@ -6,7 +6,7 @@ namespace InternetBanking.Core.Application.ViewModels.Home
 {
 	public class HomeClientViewModel
 	{
-        public List<AccountViewModel> SavingAccounts { get; set; }
+        public List<SavingAccountViewModel> SavingAccounts { get; set; }
 		public List<CreditCardViewModel> CreditCards { get; set; }
 		public List<LoanViewModel> Loans { get; set; }
 	}
