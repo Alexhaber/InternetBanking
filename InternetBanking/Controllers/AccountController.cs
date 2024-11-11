@@ -1,4 +1,5 @@
-﻿using InternetBanking.Core.Application.Dtos.User;
+﻿using AutoMapper;
+using InternetBanking.Core.Application.Dtos.User;
 using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.ViewModels.Account;
 using InternetBanking.Core.Application.ViewModels.SavingAccount;
@@ -11,6 +12,7 @@ namespace InternetBanking.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly ISavingAccountService _savingAccountService;
+        private readonly IMapper _mapper;
 
         public AccountController(IAccountService accountService, ISavingAccountService savingAccountService)
         {
@@ -36,17 +38,7 @@ namespace InternetBanking.Controllers
                 return View(model);
             }
 
-            RegisterRequest newClient = new()
-            {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Email = model.Email,
-                Admin = model.Admin,
-                Cedula = model.Cedula,
-                Password = model.Password,
-                ConfirmPassword = model.ConfirmPassword,
-                UserName = model.UserName,
-            };
+            var newClient = _mapper.Map<RegisterRequest>(model);
 
             var response = await _accountService.RegisterUserAsync(newClient);
 
@@ -58,11 +50,10 @@ namespace InternetBanking.Controllers
 
             if(!model.Admin)
             {
-                AddSavingAccountViewModel savingAccount = new()
-                {
-                    Amount = model.Amount,
-                    ClientId = response.IdCreatedUser
-                };
+                AddSavingAccountViewModel savingAccount = _mapper.Map<AddSavingAccountViewModel>(model);
+                savingAccount.Amount = model.Amount;
+                savingAccount.ClientId = response.IdCreatedUser;
+                
 
                 await _savingAccountService.AddSavingAccountAsync(savingAccount);
             }
@@ -164,20 +155,11 @@ namespace InternetBanking.Controllers
 
             try
             {
-                
-                EditUserRequest request = new()
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Cedula = user.Cedula,
-                    Email = user.Email,
-                    Password = user.Password,
-                    ConfirmPassword = user.ConfirmPassword,
-                };
 
-                
+                EditUserRequest request = _mapper.Map<EditUserRequest>(user);
+
+
+
                 var editResponse = await _accountService.EditUserAsync(request);
 
                 

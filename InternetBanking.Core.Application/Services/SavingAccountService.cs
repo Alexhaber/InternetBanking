@@ -1,4 +1,5 @@
-﻿using InternetBanking.Core.Application.Helpers;
+﻿using AutoMapper;
+using InternetBanking.Core.Application.Helpers;
 using InternetBanking.Core.Application.Interfaces.Repositories;
 using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.ViewModels.SavingAccount;
@@ -17,11 +18,13 @@ namespace InternetBanking.Core.Application.Services
 
         private readonly SerialGenerator _serialGenerator;
         private readonly ISavingAccountRepository _savingAccountRepository;
+        private readonly IMapper _mapper;
 
-        public SavingAccountService(SerialGenerator serialGenerator, ISavingAccountRepository savingAccountRepository)
+        public SavingAccountService(SerialGenerator serialGenerator, ISavingAccountRepository savingAccountRepository, IMapper mapper)
         {
             _serialGenerator = serialGenerator;
             _savingAccountRepository = savingAccountRepository;
+            _mapper = mapper;
         }
 
         public async Task AddSavingAccountAsync(AddSavingAccountViewModel model)
@@ -40,17 +43,13 @@ namespace InternetBanking.Core.Application.Services
                 }
 
                 List<SavingAccount> cuentasUser = await _savingAccountRepository.GetAccountsByClientIdAsync(model.ClientId);
-                
 
 
-                
-                SavingAccount cuenta = new()
-                {
-                    Id = randomId,
-                    UserId = model.ClientId,
-                    IsPrincipal = true,    
-                    Monto = model.Amount
-                };
+
+
+                SavingAccount cuenta = _mapper.Map<SavingAccount>(model);
+                cuenta.Id = randomId; 
+
                 if (cuentasUser != null) 
                 {
                     if (cuentasUser.Any()) {
