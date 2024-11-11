@@ -10,7 +10,7 @@ namespace InternetBanking.Core.Application.ViewModels.CreditCard
     {
         
         public decimal Limit { get; set; }
-        public decimal Amount { get; set; }
+        
         public string UserId { get; set; }
         
                                 

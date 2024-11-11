@@ -1,4 +1,5 @@
-﻿using InternetBanking.Core.Application.Helpers;
+﻿using AutoMapper;
+using InternetBanking.Core.Application.Helpers;
 using InternetBanking.Core.Application.Interfaces.Repositories;
 using InternetBanking.Core.Application.Interfaces.Services;
 using InternetBanking.Core.Application.ViewModels.CreditCard;
@@ -16,12 +17,15 @@ namespace InternetBanking.Core.Application.Services
     {
         private readonly SerialGenerator _serialGenerator;
         private readonly ICreditCardRepository _creditCardRepository;
+        private readonly IMapper _mapper;
 
-        public CreditCardService(SerialGenerator serialGenerator, ICreditCardRepository creditCardRepository)
+        public CreditCardService(SerialGenerator serialGenerator, ICreditCardRepository creditCardRepository, IMapper mapper)
         {
             _serialGenerator = serialGenerator;
             _creditCardRepository = creditCardRepository;
+            _mapper = mapper;
         }
+
         public async Task AddCreditCardAsync(AddCreditCardViewModel model)
         {
             try
@@ -35,10 +39,7 @@ namespace InternetBanking.Core.Application.Services
                 {
                     throw new ArgumentException("El límite de la tarjeta debe ser mayor a cero.", nameof(model.Limit));
                 }
-                if (model.Limit < model.Amount)
-                {
-                    throw new ArgumentException("Amount is higher than limit.", nameof(model.Limit));
-                }
+                
                 if (string.IsNullOrEmpty(model.UserId))
                 {
                     throw new ArgumentException("El ID del usuario no puede estar vacío.", nameof(model.UserId));
@@ -46,14 +47,8 @@ namespace InternetBanking.Core.Application.Services
 
                 var randomId = await _serialGenerator.GenerateSerial();
 
-                CreditCard card = new CreditCard(model.Limit)
-                {
-                    Id = randomId,
-                    Limit = model.Limit,
-                    Monto = model.Amount,
-                    UserId = model.UserId,
-
-                };
+                CreditCard card = _mapper.Map<CreditCard>(model);
+                card.Id = randomId; 
 
                 await _creditCardRepository.AddAsync(card);
             }

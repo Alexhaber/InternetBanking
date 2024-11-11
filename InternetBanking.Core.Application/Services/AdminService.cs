@@ -61,15 +61,12 @@ namespace InternetBanking.Core.Application.Services
                 var userCreditCards = await _creditCardRepository.GetCreditCardsByClientIdAsync(accountId);
 
 
-                AccountViewModel accountViewModel = new AccountViewModel
-                {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    UserSavingAccounts = _mapper.Map<List<SavingAccountViewModel>>(userSavingAccounts),
-                    UserLoans = _mapper.Map<List<LoanViewModel>>(userLoans),
-                    UserCreditCards = _mapper.Map<List<CreditCardViewModel>>(userCreditCards)
-                };
+                AccountViewModel accountViewModel = _mapper.Map<AccountViewModel>(user);
+                accountViewModel.UserSavingAccounts = _mapper.Map<List<SavingAccountViewModel>>(userSavingAccounts);
+                accountViewModel.UserLoans = _mapper.Map<List<LoanViewModel>>(userLoans);
+                accountViewModel.UserCreditCards = _mapper.Map<List<CreditCardViewModel>>(userCreditCards);
+
+
 
                 return accountViewModel;
             }
@@ -95,10 +92,10 @@ namespace InternetBanking.Core.Application.Services
             try
             {
 
-                var cliente = await _accountService.GetUserById(sAVm.ClientId);
+                var cliente = await _accountService.GetUserById(sAVm.UserId);
                 if (cliente == null)
                 {
-                    throw new Exception($"Client with ID '{sAVm.ClientId}' not found.");
+                    throw new Exception($"Client with ID '{sAVm.UserId}' not found.");
                 }
 
 

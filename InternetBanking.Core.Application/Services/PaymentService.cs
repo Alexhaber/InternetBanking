@@ -135,12 +135,7 @@ namespace InternetBanking.Core.Application.Services
             beneficiaryAccount.Monto += vm.Monto;
             clientAccount.Monto -= vm.Monto;
 
-            var transaction = new Transaction
-            {
-                DestinationProductId = beneficiaryAccount.Id,
-                SourceProductId = clientAccount.Id,
-                Monto = vm.Monto
-            };
+            var transaction = _mapper.Map<Transaction>(vm);
 
             await _savingAccountRepository.UpdateAsync(beneficiaryAccount, beneficiaryAccount.Id);
             await _savingAccountRepository.UpdateAsync(clientAccount, clientAccount.Id);
@@ -358,13 +353,8 @@ namespace InternetBanking.Core.Application.Services
             FromAccount.Monto -= vm.Monto;
             ToAccount.Monto += vm.Monto;
 
-            var transaction = new Transaction
-            {
-                SourceProductId = vm.SenderProductId,
-                DestinationProductId = vm.RecieverProductId,
-                Tipo = PaymentTypes.NormalTransaction,
-                Monto = vm.Monto
-            };
+            var transaction = _mapper.Map<Transaction>(vm);
+
 
             await _savingAccountRepository.UpdateAsync(ToAccount, ToAccount.Id);
             await _savingAccountRepository.UpdateAsync(FromAccount, FromAccount.Id);
