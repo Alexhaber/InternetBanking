@@ -39,10 +39,7 @@ namespace InternetBanking.Core.Application.Services
                 {
                     throw new ArgumentException("El límite de la tarjeta debe ser mayor a cero.", nameof(model.Limit));
                 }
-                if (model.Limit < model.Amount)
-                {
-                    throw new ArgumentException("Amount is higher than limit.", nameof(model.Limit));
-                }
+                
                 if (string.IsNullOrEmpty(model.UserId))
                 {
                     throw new ArgumentException("El ID del usuario no puede estar vacío.", nameof(model.UserId));
@@ -52,7 +49,6 @@ namespace InternetBanking.Core.Application.Services
 
                 CreditCard card = _mapper.Map<CreditCard>(model);
                 card.Id = randomId; 
-
 
                 await _creditCardRepository.AddAsync(card);
             }

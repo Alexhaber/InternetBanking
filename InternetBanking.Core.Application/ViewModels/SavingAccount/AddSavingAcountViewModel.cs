@@ -8,7 +8,7 @@ namespace InternetBanking.Core.Application.ViewModels.SavingAccount
 {
     public class AddSavingAccountViewModel
     {
-        public string ClientId { get; set; }
+        public string UserId { get; set; }
         public decimal Amount { get; set; }
         
         

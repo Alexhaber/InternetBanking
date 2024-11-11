@@ -6,7 +6,7 @@
 					<h2>No tiene permisos para acceder a esta seccion -
 						@if(User.IsInRole("Admin"))
 						{
-							<a class="btn btn-warning" asp-controller="Home" asp-action="Index">Home</a>
+							<a class="btn btn-warning" asp-controller="Home" asp-action="Dashboard">Home</a>
 						} 
 						else
 						{

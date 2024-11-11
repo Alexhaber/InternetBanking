@@ -19,7 +19,8 @@ namespace InternetBanking.Core.Application.Mappings
             CreateMap<AddSavingAccountViewModel, SavingAccount>()
                 .ForMember(dest => dest.Monto, opt => opt.MapFrom(src => src.Amount))
                 .ForMember(dest => dest.IsPrincipal, opt => opt.MapFrom(src => true)) 
-                .ForMember(dest => dest.Id, opt => opt.Ignore()); 
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+            #endregion
             #region AccountToAccount Mapping
             CreateMap<AccountToAccountViewModel, Transaction>()
                 .ForMember(dest => dest.SourceProductId, opt => opt.MapFrom(src => src.SenderProductId))
@@ -40,7 +41,6 @@ namespace InternetBanking.Core.Application.Mappings
             #endregion
             #region AddCreditCard Mapping
             CreateMap<AddCreditCardViewModel, CreditCard>()
-                .ForMember(dest => dest.Monto, opt => opt.MapFrom(src => src.Amount))
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
                 .ForMember(dest => dest.Limit, opt => opt.MapFrom(src => src.Limit))
                 .ForMember(dest => dest.Id, opt => opt.Ignore()); 
@@ -68,7 +68,7 @@ namespace InternetBanking.Core.Application.Mappings
             #endregion
             #region Register to SavingAccount
             CreateMap<RegisterViewModel, AddSavingAccountViewModel>()
-                .ForMember(dest => dest.ClientId, opt => opt.Ignore());
+                .ForMember(dest => dest.UserId, opt => opt.Ignore());
             #endregion
             #region Register
             CreateMap<RegisterRequest, RegisterViewModel>()

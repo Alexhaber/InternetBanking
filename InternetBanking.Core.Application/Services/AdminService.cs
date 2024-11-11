@@ -92,10 +92,10 @@ namespace InternetBanking.Core.Application.Services
             try
             {
 
-                var cliente = await _accountService.GetUserById(sAVm.ClientId);
+                var cliente = await _accountService.GetUserById(sAVm.UserId);
                 if (cliente == null)
                 {
-                    throw new Exception($"Client with ID '{sAVm.ClientId}' not found.");
+                    throw new Exception($"Client with ID '{sAVm.UserId}' not found.");
                 }
 
 

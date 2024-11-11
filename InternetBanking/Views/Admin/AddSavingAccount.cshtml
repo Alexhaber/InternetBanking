@@ -1,4 +1,5 @@
-﻿@model InternetBanking.Core.Application.ViewModels.SavingAccount.AddSavingAccountViewModel
+﻿@using InternetBanking.Core.Application.ViewModels.SavingAccount
+@model AddSavingAccountViewModel
 
 @{
     ViewData["Title"] = "Agregar Cuenta de Ahorro";
@@ -13,10 +14,10 @@
         <span asp-validation-for="Amount" class="text-danger"></span>
     </div>
 
-    <input type="hidden" asp-for="ClientId" />
+    <input type="hidden" asp-for="@Model.UserId" />
 
     <button type="submit" class="btn btn-primary">Agregar</button>
-    <a asp-action="Productos" asp-route-id="@Model.ClientId" class="btn btn-secondary">Cancelar</a>
+    <a asp-action="Productos" asp-route-id="@Model.UserId" class="btn btn-secondary">Cancelar</a>
 </form>
 
 @section Scripts {

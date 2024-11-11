@@ -45,7 +45,7 @@ namespace InternetBanking.Controllers
 
         public IActionResult AddSavingAccount(string clientId)
         {
-            return View(new AddSavingAccountViewModel { ClientId = clientId });
+            return View(new AddSavingAccountViewModel { UserId = clientId });
         }
 
         [HttpPost]
@@ -56,7 +56,7 @@ namespace InternetBanking.Controllers
             try
             {
                 await _adminService.AddSavingAccount(model);
-                return RedirectToAction("Productos", new { id = model.ClientId });
+                return RedirectToAction("Productos", new { id = model.UserId });
             }
             catch (Exception ex)
             {

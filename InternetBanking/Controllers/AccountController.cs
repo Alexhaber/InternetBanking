@@ -14,12 +14,13 @@ namespace InternetBanking.Controllers
         private readonly ISavingAccountService _savingAccountService;
         private readonly IMapper _mapper;
 
-        public AccountController(IAccountService accountService, ISavingAccountService savingAccountService)
+        public AccountController(IAccountService accountService, ISavingAccountService savingAccountService, IMapper mapper)
         {
             _accountService = accountService;
             _savingAccountService = savingAccountService;
+            _mapper = mapper;
         }
-        
+
         public async Task<IActionResult> Register()
         {
             if (User.IsInRole("Client"))
@@ -52,7 +53,7 @@ namespace InternetBanking.Controllers
             {
                 AddSavingAccountViewModel savingAccount = _mapper.Map<AddSavingAccountViewModel>(model);
                 savingAccount.Amount = model.Amount;
-                savingAccount.ClientId = response.IdCreatedUser;
+                savingAccount.UserId = response.IdCreatedUser;
                 
 
                 await _savingAccountService.AddSavingAccountAsync(savingAccount);

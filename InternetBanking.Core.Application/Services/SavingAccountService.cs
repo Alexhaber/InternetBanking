@@ -37,12 +37,12 @@ namespace InternetBanking.Core.Application.Services
                 {
                     throw new InvalidOperationException("Error generating unique serial ID.");
                 }
-                if (string.IsNullOrEmpty(model.ClientId))
+                if (string.IsNullOrEmpty(model.UserId))
                 {
                     throw new InvalidOperationException("Client ID cannot be null or empty.");
                 }
 
-                List<SavingAccount> cuentasUser = await _savingAccountRepository.GetAccountsByClientIdAsync(model.ClientId);
+                List<SavingAccount> cuentasUser = await _savingAccountRepository.GetAccountsByClientIdAsync(model.UserId);
 
 
 
